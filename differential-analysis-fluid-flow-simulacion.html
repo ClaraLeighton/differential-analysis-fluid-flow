@@ -1,0 +1,526 @@
+<!doctype html>
+<html lang="es"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Differential Analysis of Fluid Flow · Workshop</title>
+<style>
+:root{color-scheme:dark;--bg:#08111c;--panel:#101f30;--panel2:#0a1929;--border:#2c455b;--text:#edf5fc;--muted:#9db5c6;--local:#58a9ff;--conv:#b68cff;--pressure:#62d4aa;--visc:#ffb465;--grav:#a9bacd;--cyan:#75ddeb;--red:#ff7e8e}
+*{box-sizing:border-box}body{margin:0;font:15px/1.48 system-ui,-apple-system,Segoe UI,Arial,sans-serif;background:radial-gradient(ellipse at 40% -15%,#1c3c53,#08111c 65%);color:var(--text)}header{display:flex;justify-content:space-between;align-items:center;padding:18px max(20px,calc((100vw - 1380px)/2));border-bottom:1px solid var(--border)}.brand{font-weight:850;letter-spacing:.13em;font-size:21px}.brand em{color:var(--cyan);font-style:normal}.micro{font-size:11px;color:var(--muted);letter-spacing:.09em;text-transform:uppercase}.shell{max-width:1380px;padding:20px;margin:auto}.heading{display:flex;justify-content:space-between;align-items:end;gap:14px;flex-wrap:wrap;margin-bottom:15px}h1{font-size:clamp(23px,3vw,35px);margin:4px 0 0;line-height:1.12}h2{font-size:17px;margin:0}h3{font-size:15px;margin:0 0 8px}.muted,p{color:var(--muted)}p{margin:6px 0 10px}.panel{background:linear-gradient(143deg,#14283a,#0c1928);border:1px solid var(--border);border-radius:16px;padding:17px;min-width:0}.scene{position:relative;overflow:hidden;border:1px solid #365669;border-radius:12px;background:linear-gradient(#183348,#091923);isolation:isolate}.scene svg{display:block;width:100%;height:auto}.scene canvas{position:absolute;inset:0;width:100%;height:100%;pointer-events:none}.scene small{position:absolute;bottom:9px;left:15px;background:#06111ac9;border:1px solid #376073;padding:3px 9px;border-radius:40px;color:#cbe8f2}.toprow{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:12px;flex-wrap:wrap}.pill{border:1px solid #406478;border-radius:50px;padding:4px 10px;font-size:12px;color:#b7eafa}.controls{display:grid;grid-template-columns:minmax(0,1.2fr) minmax(0,1fr);gap:16px;margin:16px 0}.controlgrid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:13px}.control label{display:flex;justify-content:space-between;gap:8px;font-size:13px;margin-bottom:8px}.control label b{color:var(--cyan);font-variant-numeric:tabular-nums}input[type=range]{width:100%;accent-color:var(--cyan);cursor:pointer}.buttons{display:flex;gap:9px;flex-wrap:wrap;margin-top:15px}button{font:inherit;cursor:pointer;background:#1a3246;color:var(--text);border:1px solid #42617a;padding:9px 14px;border-radius:10px}button:hover{border-color:#8bdfea}button.primary{background:#17607a;border-color:#44abc2}.metrics{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:8px}.metric{background:#0a1928;border:1px solid #2b4961;padding:10px;border-radius:10px;min-width:0}.metric span{display:block;font-size:11px;color:var(--muted)}.metric strong{display:block;font-size:clamp(13px,1.55vw,19px);font-variant-numeric:tabular-nums;white-space:nowrap}.tabs{display:flex;gap:8px;margin:18px 0 13px;flex-wrap:wrap}.tabs button[aria-selected=true]{background:#19546c;border-color:#76d5e9}.note{font-size:13px;background:#0b1c2b;border-left:3px solid #60bfd7;border-radius:6px;padding:12px;color:#c1d5e2}.split{display:grid;grid-template-columns:1fr 1fr;gap:14px}.tablewrap{overflow:auto}table{border-collapse:collapse;width:100%;font-size:12px}th,td{text-align:left;border-bottom:1px solid #345064;padding:10px 6px}th{color:#a9c3d5}.hidden{display:none!important}.sectiontitle{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;margin:0 0 12px}.equation-stage{background:#071521;border:1px solid #31536c;border-radius:13px;padding:18px 14px;margin-bottom:14px}.equation-stage h3{text-align:center;color:#dcecf7;font-size:16px}.eq{display:flex;gap:6px;flex-wrap:wrap;align-items:center;justify-content:center;padding:12px 4px;font-family:Cambria,'STIX Two Math','Times New Roman',serif;font-size:clamp(18px,2.25vw,28px);line-height:1.5}.math-term{display:inline-flex;gap:5px;align-items:center;justify-content:center;border-bottom:3px solid var(--tc);border-radius:6px;padding:3px 7px;color:var(--tc);transition:opacity .25s,filter .25s}.math-term.is-zero{opacity:.31;filter:grayscale(.6);text-decoration:line-through;text-decoration-color:#ff6376;text-decoration-thickness:2px}.math-term math{font-size:1em}.symbol{color:#d6e2ea;font-size:1em}.termkey{display:flex;gap:8px;flex-wrap:wrap;justify-content:center}.key{font-size:12px;padding:6px 10px;border:1px solid var(--tc);border-radius:8px;color:var(--tc)}.analysis-grid{display:grid;grid-template-columns:minmax(0,.9fr) minmax(0,1.1fr);gap:16px}.hyp-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}.hyp{display:flex;gap:8px;background:#0a1a2b;border:1px solid #365064;padding:11px;border-radius:10px;cursor:pointer;min-height:78px}.hyp input{accent-color:var(--cyan);margin-top:5px}.hyp b{display:block;font-size:13px}.hyp small{display:block;color:var(--muted);margin-top:3px;font-size:11px}.hyp:has(input:checked){border-color:#5dc4e0;background:#0b3141}.display{border-radius:11px;background:#0a1826;padding:13px;border:1px solid #2a485d;margin-top:11px}.display svg{width:100%;height:150px;display:block}.display p{font-size:12px;margin:6px 0}.proof{background:#0a1c2d;border-radius:10px;border:1px solid #34516a;padding:14px;margin-bottom:12px}.proof .eq{font-size:clamp(17px,1.8vw,23px)}.reason{border-left:3px solid var(--cyan);padding:8px 11px;margin:9px 0;background:#112b3a;font-size:12px}.reason b{display:block}.reason span{color:#b7d2e2}.challenge{display:grid;gap:8px;margin-top:12px}.challenge label{padding:10px;background:#0c2031;border-radius:8px;border:1px solid #2f4d62;display:flex;align-items:center;gap:8px}.challenge input{accent-color:#64cee7}.status{margin-top:10px;color:#bfdfec;font-size:12px}footer{padding:24px;color:#94afc2;font-size:12px;text-align:center}.toprule{border-top:1px solid #29455a;padding-top:12px;margin-top:12px}@media(max-width:1050px){.controls,.analysis-grid{grid-template-columns:1fr}.metrics{grid-template-columns:repeat(3,minmax(0,1fr))}}@media(max-width:680px){.shell{padding:12px}.panel{padding:12px}.controlgrid,.metrics{grid-template-columns:repeat(2,minmax(0,1fr))}.hyp-grid,.split{grid-template-columns:1fr}.eq{font-size:19px}.math-term{padding:1px 3px}.brand{font-size:17px}.scene svg{width:100%;min-width:0}.scene{overflow:hidden}}@media(prefers-reduced-motion:reduce){*{scroll-behavior:auto!important;transition:none!important}}
+
+/* v0.4 — calm, instrument-like design */
+:root{--bg:#0c151e;--panel:#15232e;--muted:#aec1cf}body{background:linear-gradient(145deg,#172935,#0b151d 52%,#111b24)}
+.panel{background:linear-gradient(145deg,#182a37,#101d28)}.scene{background:linear-gradient(#1c313e,#101d28)}
+.scene svg{filter:saturate(.72)}.math-term{padding:7px 9px;position:relative}.math-term.is-zero{text-decoration:none;opacity:.35}.math-term.is-zero:after{content:'';position:absolute;left:5%;right:5%;top:51%;height:2px;background:#f18b92;transform:rotate(-5deg)}
+.equation-stage{position:relative}.eq{row-gap:12px}.eq .math-term math{max-width:100%;overflow:visible}.termgroup{padding:12px;background:#0b1b28;border:1px solid #355166;border-radius:12px;margin:12px 0}.termgroup h3{font-size:13px;color:#c9dfec}.equation-expanded{font-size:clamp(18px,1.85vw,24px)!important;gap:6px}.equation-expanded .math-term{padding:8px 6px}.math-focus{border:1px solid #38566c;background:#0d202e;border-radius:10px;padding:12px;margin:10px 0}.math-focus h3{margin:0}.math-focus .eq{font-size:clamp(18px,2.0vw,25px)}.legendstate{display:flex;flex-wrap:wrap;gap:10px;font-size:12px;color:#b5cbd9;margin-top:10px}.legendstate span{border:1px solid #486177;border-radius:20px;padding:4px 9px}.term-status-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin:12px 0}.termstatus{border:1px solid #38536b;border-left:4px solid var(--tc);border-radius:9px;background:#0b1b28;padding:12px}.termstatus strong{display:block;color:var(--tc);font-size:13px}.termstatus small{color:#b2cad9}.termstatus .shortmath{font-family:Cambria,serif;font-size:17px;margin:6px 0}.termstatus.zero .shortmath{opacity:.48;text-decoration:line-through;text-decoration-color:#f18798}.termstatus .state{font-size:11px;letter-spacing:.06em;text-transform:uppercase;margin:7px 0;color:#e3edf3}.explainline{display:grid;grid-template-columns:1fr 1fr;gap:12px}.profilePanel{border:1px solid #38536b;border-radius:11px;background:#0c1c28;padding:12px}.profilePanel svg{width:100%;height:130px}.relative{display:flex;align-items:center;gap:12px;margin:9px 0;font-size:12px}.relative .bar{height:12px;border-radius:9px;background:#173245;flex:1;overflow:hidden}.relative .bar i{display:block;height:100%;border-radius:9px;transition:width .2s}.relative b{min-width:90px}.footnote{font-size:12px;color:#b6cada}.analysis-detail{margin:15px 0}.analysis-detail > summary{cursor:pointer;color:#d8effa;font-weight:650;padding:10px;border:1px solid #3a5569;border-radius:9px}.analysis-detail[open] > summary{margin-bottom:9px}
+@media(max-width:850px){.term-status-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.explainline{grid-template-columns:1fr}}@media(max-width:550px){.term-status-grid{grid-template-columns:1fr}.equation-expanded{font-size:17px!important}.math-term{padding:4px}.equation-stage{padding:12px 5px}}
+.fixed-setting{background:#0a1928;border:1px solid #355268;border-radius:10px;padding:10px 12px;display:flex;flex-direction:column;gap:3px}.fixed-setting span{font-size:12px;color:#a4c1d1}.fixed-setting strong{font-size:16px;color:#e6f2f8}.fixed-setting small{font-size:11px;color:#83a5b9}.controlgrid{grid-template-columns:minmax(0,1.4fr) minmax(0,1fr) minmax(0,1fr)}@media(max-width:700px){.controlgrid{grid-template-columns:1fr}}
+.recordform{display:grid;grid-template-columns:1fr 2fr;gap:12px;margin-top:16px}.recordform label{font-size:12px;color:var(--muted)}.recordform input,.recordform select{display:block;width:100%;margin-top:5px;background:#0a1a29;color:#edf5fc;border:1px solid #4b6677;border-radius:7px;padding:10px;font:inherit}button:disabled{opacity:.4;cursor:not-allowed}.metric strong{white-space:normal}.flow-cue{font-size:12px;color:#bfdeeb}@media(max-width:650px){.recordform{grid-template-columns:1fr}}
+#collectionApparatus{transition:opacity .25s}#collectedWater{transition:d .1s}button:disabled{opacity:.4;cursor:not-allowed}.measurement-help{margin-top:7px;font-size:12px;color:#aecbd8}
+
+.workshop-tabs{display:flex;gap:9px;flex-wrap:wrap;margin:0 0 20px;padding:8px;background:#0d1b28;border:1px solid #29465b;border-radius:14px}.workshop-tabs button{flex:1;min-width:200px;text-align:center;font-weight:700}.workshop-tabs button.active{background:#1d5267;border-color:#83d2e9;color:white}.scenario-switch{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:18px}.scenario-switch button{flex:1;min-width:150px}.scenario-switch button.selected{border-color:#7dd8ec;background:#1a5268}.ns-layout{display:grid;grid-template-columns:1.45fr 1fr;gap:16px}.ns-scene{background:linear-gradient(#102737,#081520);border:1px solid #365568;border-radius:12px}.ns-scene svg{width:100%;display:block}.ns-input{background:#0c1c2a;padding:16px;border-radius:12px}.ns-input label{display:block;margin:13px 0 8px;font-size:13px;color:#c9deed}.ns-readout{color:#89dce8;font-size:13px;font-weight:700;margin:8px 0}.ns-equation-row{display:flex;flex-wrap:wrap;gap:7px;align-items:center;justify-content:center;margin:18px 0}.ns-equation-row>b{font-size:24px}.ns-term{--impact:1;min-width:110px;flex:1;max-width:205px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:7px;border:1px solid var(--tc);border-bottom:4px solid var(--tc);padding:12px 8px;background:#0d2030;border-radius:10px;color:var(--tc);transition:opacity .2s,background .2s,transform .2s}.ns-term span{font:700 12px system-ui;text-align:center}.ns-term math{font-size:25px;min-height:36px}.ns-term.dimterm{opacity:.55}.ns-term.focusterm{background:#193748;box-shadow:0 0 calc(16px * var(--impact)) -6px var(--tc);transform:scale(calc(1 + .025 * var(--impact)))}.ns-term.zeroterm{text-decoration:line-through;opacity:.28}.ns-bigmath{font:italic 24px Georgia,serif;padding:20px;background:#0c1b29;color:#e6f2f8;border-radius:10px;text-align:center;overflow-wrap:anywhere}.ns-graph{background:#0a1a28;border:1px solid #294759;border-radius:10px;margin:12px 0}.ns-graph svg{display:block;width:100%;height:160px}@media(max-width:760px){.ns-layout{grid-template-columns:1fr}.ns-equation-row{gap:4px}.ns-term{min-width:115px;max-width:45%;padding:8px 3px}.ns-term math{font-size:20px}}
+
+/* WORKSHOP 5 · una tubería, ecuación protagonista */
+.ns-main-stage{padding:23px 16px}.ns-vector-eq{font-size:clamp(22px,2.65vw,36px);gap:9px;margin:6px 0 14px}.ns-vector-eq .math-term{padding:10px 12px;border-bottom-width:4px}.ns-vector-eq math{font-size:1.03em}.ns-axial{margin-top:20px;background:#0a1a29;border:1px solid #304d61;border-radius:12px;padding:14px}.ns-axial .micro{text-align:center}.ns-axial .eq{font-size:clamp(17px,1.8vw,23px)}.ns-highlight{opacity:1;filter:saturate(1.23);text-shadow:0 0 16px currentColor}.ns-soft{opacity:.66}.ns-main-stage .math-term.is-zero{opacity:.26;filter:grayscale(.6)}.scenario-switch button.selected{background:#174558}.ns-scene{min-height:230px}.termkey .key{font-size:13px;padding:7px 12px}.equation-stage .termkey{margin:6px 0 8px}.ns-vector-eq .math-term{flex-shrink:0}@media(max-width:760px){.ns-vector-eq{font-size:21px;gap:5px}.ns-vector-eq .math-term{padding:4px}.ns-axial{padding:8px}.ns-axial .eq{font-size:17px}}
+.ns-model-hypothesis{margin:9px 0 12px;padding:10px 13px;border-radius:9px;background:#102738;border:1px solid #3a6378;color:#d7e8f3;font-size:12px;line-height:1.55}.ns-model-hypothesis strong{color:#fff}.ns-model-hypothesis .subtle{display:block;color:#a7c1d0;margin-top:3px}.ns-axterm.approx{opacity:.48;border-bottom-style:dashed;filter:saturate(.55)}.ns-axterm.approx::after{content:'≈0';font:10px system-ui,sans-serif;color:#a8bbca;position:absolute;right:0;bottom:-16px}.ns-axterm.zero::after{content:'=0';font:10px system-ui,sans-serif;position:absolute;right:0;bottom:-16px;color:#f2b1bc}.ns-live-expression{padding-bottom:25px}
+
+/* v1.4: exactly one scaling mechanism for the general vector equation. */
+#newVectorEquation .math-term,
+#newVectorEquation .math-term.ns-emphasis,
+#newVectorEquation .math-term.ns-secondary,
+#newVectorEquation .math-term.is-zero {
+ transform:scale(var(--live-scale,1));
+ transition:transform .20s ease-out, opacity .20s ease-out, background .20s ease-out;
+}
+#newVectorEquation .math-term::after {content:none!important;}
+#newVectorEquation .math-term.ns-emphasis {background:color-mix(in srgb,var(--tc) 10%,transparent);}
+#newVectorEquation .math-term.is-zero {--live-scale:.87!important;}
+.ns-detail-formula math{font-size:clamp(19px,2vw,26px);max-width:100%;overflow-x:auto;overflow-y:hidden}.ns-detail-formula .eqline{padding:12px 0;border-bottom:1px solid #29495e}.ns-interpret-new .panel{min-width:0}</style><style>
+.ns-new-scene{background:linear-gradient(155deg,#17303f,#0a1b27);border:1px solid #3b5b6b;border-radius:13px;overflow:hidden}.ns-new-scene svg{width:100%;height:auto;display:block}.ns-scene-caption{text-align:center;font-size:12px;color:#c4dbe5;padding:4px 12px 13px}.ns-control-new{margin-top:14px;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px}.ns-field-new{display:flex;flex-direction:column;gap:6px;background:#0b1b29;border:1px solid #304d60;border-radius:10px;padding:12px;min-width:0}.ns-field-new label{font-size:12px;color:#c0d8e6}.ns-field-new select{width:100%;background:#162f41;color:#f0f5fa;border:1px solid #4b6a7c;border-radius:7px;padding:8px;font:inherit;font-size:12px}.ns-field-new span{font-size:12px;color:#92d8ea}.ns-term-button{background:#0d2332;color:var(--tc);border-color:var(--tc)}.ns-term-button.ns-term-selected{background:color-mix(in srgb,var(--tc) 18%,#0b2030);box-shadow:0 0 0 1px var(--tc)}.ns-highlight{filter:brightness(1.28);box-shadow:0 2px 12px #9fb9d120}.ns-soft{opacity:.63}.ns-balanced{background:#102433;border-radius:12px;padding:16px;margin-top:16px}.ns-axial-lines{display:grid;gap:8px;font-family:Cambria,'Times New Roman',serif;font-size:clamp(17px,1.65vw,23px);line-height:1.8;text-align:center;overflow-wrap:anywhere}.ns-interpret-new{display:grid;grid-template-columns:1fr 1fr;gap:15px;margin-top:14px}.ns-interpret-new svg{width:100%;height:185px;background:#0b1c2b;border-radius:10px;margin-top:10px}.ns-detail-formula{color:#eaf2f7;font-size:clamp(17px,2vw,24px);font-family:Cambria,'Times New Roman',serif;padding:10px 4px;overflow-wrap:anywhere}.ns-detail-formula .eqline{margin:10px 0}.ns-detail-formula .eqtag{display:block;font-size:13px;color:#b8d0df;font-family:system-ui,-apple-system,Segoe UI,Arial,sans-serif;margin-bottom:2px}.ns-model-hypothesis{margin:0 0 12px;max-width:980px;font-size:12px;line-height:1.45;color:#c3d8e4;background:#0b1b29;border:1px solid #314f64;border-radius:10px;padding:10px 12px}.ns-model-hypothesis .subtle{color:#9fb9ca}.ns-color-specs{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin-top:10px}.ns-color-specs span{font-size:12px;padding:6px 10px;border-radius:999px;border:1px solid var(--tc);color:var(--tc);background:#0b1b29}.ns-interpret-new .note{margin-top:12px}@media(max-width:1000px){.ns-control-new{grid-template-columns:repeat(2,minmax(0,1fr))}}@media(max-width:700px){.ns-interpret-new,.ns-control-new{grid-template-columns:1fr}.ns-axial-lines{font-size:17px}.ns-term-button{font-size:11px}}
+
+/* v0.4 · compacto, ecuación única y retroalimentación sincronizada */
+#navierView .heading{margin-bottom:8px}#navierView .heading p{margin:3px 0}
+#navierView>.panel:first-of-type{padding:12px 15px;margin-bottom:9px!important}
+#navierView .ns-new-scene svg{max-height:188px}
+#navierView .ns-scene-caption{padding:0 8px 7px}
+#navierView .ns-control-new{margin-top:8px;gap:7px}
+#navierView .ns-field-new{padding:8px 10px;gap:3px}
+#navierView .ns-field-new label{margin:0}
+#navierView>.equation-stage{padding:12px 12px 14px;margin-bottom:10px}
+#navierView>.equation-stage>h3{margin:4px 0}
+#newVectorEquation{gap:5px;margin:6px 0 6px;padding:6px 2px;font-size:clamp(18px,2vw,28px);flex-wrap:wrap;overflow:visible}
+#newVectorEquation .math-term{padding:7px 5px;border-bottom-width:2px;transform-origin:center;transition:transform .36s ease,opacity .36s ease,filter .36s ease,background .36s ease,box-shadow .36s ease;position:relative}
+#newVectorEquation .math-term.ns-emphasis{transform:scale(1.14);opacity:1;z-index:2;background:color-mix(in srgb,var(--tc) 12%,transparent);box-shadow:0 0 12px color-mix(in srgb,var(--tc) 22%,transparent);filter:none}
+#newVectorEquation .math-term.ns-secondary{transform:scale(.95);opacity:.72;filter:none}
+#newVectorEquation .math-term.is-zero{transform:scale(.90);opacity:.26}
+#newVectorEquation .symbol{font-size:.93em}
+.ns-cause-result{max-width:940px;margin:7px auto 9px;display:flex;align-items:baseline;justify-content:center;gap:9px;flex-wrap:wrap;text-align:center;font-size:13px}
+.ns-cause-result strong{color:#eaf7fe}.ns-cause-result span{color:#b8cfdd}
+#navierView .termkey .key{padding:5px 9px;font-size:11px}
+.ns-math-more{margin-top:10px}.ns-math-more>summary{cursor:pointer;color:#c7e8f6;font-size:12px;list-style:revert;display:list-item;margin-left:18px}.ns-math-more .ns-balanced{margin-top:8px}
+@media(max-width:700px){#navierView .ns-new-scene svg{max-height:160px}#newVectorEquation{font-size:18px;gap:2px}#newVectorEquation .math-term{padding:5px 2px}#newVectorEquation .math-term.ns-emphasis{transform:scale(1.07)}.ns-cause-result{font-size:12px}}
+
+/* v1.4: exactly one scaling mechanism for the general vector equation. */
+#newVectorEquation .math-term,
+#newVectorEquation .math-term.ns-emphasis,
+#newVectorEquation .math-term.ns-secondary,
+#newVectorEquation .math-term.is-zero {
+ transform:scale(var(--live-scale,1));
+ transition:transform .20s ease-out, opacity .20s ease-out, background .20s ease-out;
+}
+#newVectorEquation .math-term::after {content:none!important;}
+#newVectorEquation .math-term.ns-emphasis {background:color-mix(in srgb,var(--tc) 10%,transparent);}
+#newVectorEquation .math-term.is-zero {--live-scale:.87!important;}
+</style><style>
+/* v0.5: continuously responsive physics without misleading discrete flashes */
+#newVectorEquation .math-term{--live-scale:1;transform:scale(var(--live-scale));transform-origin:center;transition:transform .15s ease-out, opacity .15s ease-out, filter .15s ease-out;position:relative;will-change:transform}
+#newVectorEquation .math-term.ns-active-live{filter:brightness(1.15) drop-shadow(0 0 7px var(--tc));opacity:1}
+#newVectorEquation .math-term.is-zero{--live-scale:.88!important;opacity:.28!important;filter:grayscale(.7)!important}
+.ns-axial-gravity{text-align:center;color:#aec3d4;font-size:13px;margin:-4px 0 13px}
+.ns-axial-gravity strong{color:var(--grav);font-weight:700}
+.ns-axial-gravity span{opacity:.8}
+
+/* v1.4: exactly one scaling mechanism for the general vector equation. */
+#newVectorEquation .math-term,
+#newVectorEquation .math-term.ns-emphasis,
+#newVectorEquation .math-term.ns-secondary,
+#newVectorEquation .math-term.is-zero {
+ transform:scale(var(--live-scale,1));
+ transition:transform .20s ease-out, opacity .20s ease-out, background .20s ease-out;
+}
+#newVectorEquation .math-term::after {content:none!important;}
+#newVectorEquation .math-term.ns-emphasis {background:color-mix(in srgb,var(--tc) 10%,transparent);}
+#newVectorEquation .math-term.is-zero {--live-scale:.87!important;}
+</style><style>
+.ns-live-axial{background:#071927;border:1px solid #31536c;border-radius:12px;padding:13px 14px;margin:10px 0 15px}.ns-live-head{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;font-size:13px;color:#dfedf6}.ns-live-head span{font-size:11px;color:#9cb8ca}.ns-live-expression{display:flex;align-items:center;justify-content:center;gap:5px;flex-wrap:wrap;padding:13px 1px 11px;font-family:Cambria,'Times New Roman',serif;font-size:clamp(17px,1.9vw,24px);line-height:1.6}.ns-ax-group{display:inline-flex;align-items:center;gap:3px;flex-wrap:wrap;justify-content:center}.ns-axterm{--impact:1;display:inline-flex;align-items:center;justify-content:center;position:relative;padding:4px 6px;color:var(--tc);border-bottom:2px solid var(--tc);border-radius:5px;transition:transform .2s ease,opacity .2s ease,filter .2s ease;transform:scale(var(--impact));transform-origin:center}.ns-axterm.zero{opacity:.30;text-decoration:line-through;text-decoration-color:#fb8197;text-decoration-thickness:2px}.ns-axterm.focus{background:color-mix(in srgb,var(--tc) 12%,transparent)}.ns-axterm math{font-size:1em}.ns-axop{color:#dbe7ee}.ns-live-foot{font-size:12px;color:#b7cfde;border-top:1px solid #284357;padding-top:10px}.ns-ax-note{font-size:11px;color:#9cb8ca}.ns-axterm[title]{cursor:help}@media(max-width:680px){.ns-live-expression{font-size:17px}.ns-axterm{padding:3px 2px}.ns-live-axial{padding:11px 7px}}
+
+/* v1.4: exactly one scaling mechanism for the general vector equation. */
+#newVectorEquation .math-term,
+#newVectorEquation .math-term.ns-emphasis,
+#newVectorEquation .math-term.ns-secondary,
+#newVectorEquation .math-term.is-zero {
+ transform:scale(var(--live-scale,1));
+ transition:transform .20s ease-out, opacity .20s ease-out, background .20s ease-out;
+}
+#newVectorEquation .math-term::after {content:none!important;}
+#newVectorEquation .math-term.ns-emphasis {background:color-mix(in srgb,var(--tc) 10%,transparent);}
+#newVectorEquation .math-term.is-zero {--live-scale:.87!important;}
+</style><style>
+</style></head><body>
+<header><div class="brand">Differential Analysis of <em>Fluid Flow</em></div></header>
+<main class="shell"><nav class="workshop-tabs" aria-label="Experimentos"><button class="active" id="tabReynolds" type="button" aria-selected="true">01 · Experimento de Reynolds</button><button id="tabNavier" type="button" aria-selected="false">02 · Navier–Stokes</button></nav><div id="reynoldsView"><div class="heading"><div><div class="micro">WORKSHOP 5 · Fluid Mechanics</div><h1>Experimento de Reynolds</h1></div><div class="pill" id="regimePill">Observa antes de clasificar</div></div>
+<section class="panel"><div class="toprow"><h2>Montaje del experimento</h2><span class="micro">Circuito por gravedad · vista pseudo-3D</span></div>
+<div class="scene" id="scene"><svg viewBox="0 0 1120 380" role="img" aria-label="Depósito de agua elevado conectado mediante un codo a un tubo horizontal de vidrio, inyector de tinta y válvula de salida">
+<defs>
+ <linearGradient id="tank" x1="0" x2="1"><stop stop-color="#d8eef9" stop-opacity=".48"/><stop offset=".2" stop-color="#42718d" stop-opacity=".35"/><stop offset=".65" stop-color="#16405a" stop-opacity=".23"/><stop offset="1" stop-color="#9dc9df" stop-opacity=".5"/></linearGradient>
+ <linearGradient id="water" x1="0" x2="1"><stop stop-color="#3e9ac1" stop-opacity=".85"/><stop offset=".5" stop-color="#19769c" stop-opacity=".5"/><stop offset="1" stop-color="#6bd9ec" stop-opacity=".68"/></linearGradient>
+ <linearGradient id="glass" x1="0" y1="0" x2="0" y2="1"><stop stop-color="#e2f5ff" stop-opacity=".6"/><stop offset=".18" stop-color="#6cc6e6" stop-opacity=".17"/><stop offset=".68" stop-color="#2781a5" stop-opacity=".16"/><stop offset="1" stop-color="#b7f0ff" stop-opacity=".55"/></linearGradient>
+ <linearGradient id="metal" x1="0" x2="1"><stop stop-color="#44596a"/><stop offset=".48" stop-color="#9eb4c5"/><stop offset="1" stop-color="#314e62"/></linearGradient>
+ <filter id="shade"><feGaussianBlur stdDeviation="9"/></filter>
+</defs>
+<!-- stage -->
+<ellipse cx="551" cy="341" rx="490" ry="18" fill="#000" opacity=".25" filter="url(#shade)"/>
+<path d="M45 328 H1069" stroke="#416078" stroke-width="5"/><path d="M45 337H1069" stroke="#172c3d" stroke-width="12"/>
+<!-- tank stand -->
+<path d="M91 221V326M259 221V326" stroke="#506779" stroke-width="8"/><path d="M83 327h26M248 327h26" stroke="#91adbf" stroke-width="6"/>
+<!-- tubing behind apparatus: outlet tank down and bend into test pipe -->
+<path d="M177 206V256Q177 282 207 282H336" stroke="#9bdcf5" stroke-opacity=".24" stroke-width="39" fill="none" stroke-linecap="round"/>
+<path d="M177 206V256Q177 282 207 282H336" stroke="#275d7b" stroke-width="28" fill="none" stroke-linecap="round"/>
+<path d="M177 206V256Q177 282 207 282H336" stroke="#55b8df" stroke-width="21" fill="none" stroke-linecap="round"/>
+<path d="M177 206V256Q177 282 207 282H336" stroke="#c9f1fa" stroke-opacity=".55" stroke-width="3" fill="none"/>
+<!-- tank with ellipse rim and water -->
+<path d="M80 70H272V210Q176 248 80 210Z" fill="url(#tank)" stroke="#c3dfef" stroke-width="3"/>
+<path d="M84 118H268V207Q176 234 84 207Z" fill="url(#water)" opacity=".78"/>
+<ellipse cx="176" cy="118" rx="92" ry="13" fill="#7acde9" fill-opacity=".53" stroke="#abddef" stroke-opacity=".8"/>
+<ellipse cx="176" cy="70" rx="96" ry="20" fill="#284f68" fill-opacity=".85" stroke="#d1f4ff" stroke-width="5"/>
+<ellipse cx="176" cy="70" rx="86" ry="12" fill="#6aaeca" fill-opacity=".18"/>
+<path d="M96 76V205M256 76V205" stroke="#e2f8ff" stroke-opacity=".45" stroke-width="5"/>
+<path d="M105 153h15M105 177h15M105 201h15" stroke="#dbf5ff" opacity=".62" stroke-width="2"/>
+<rect x="151" y="209" width="52" height="19" rx="5" fill="url(#metal)"/>
+<!-- tube supports -->
+<path d="M422 291V331M816 291V331" stroke="#638199" stroke-width="9"/><path d="M405 336H440M799 336H834" stroke="#809cb2" stroke-width="7"/>
+<!-- actual main glass tube -->
+<rect x="322" y="256" width="636" height="51" rx="18" fill="#337f9b" fill-opacity=".4" stroke="#d5f5ff" stroke-opacity=".63" stroke-width="3"/>
+<rect x="327" y="262" width="626" height="39" rx="14" fill="url(#glass)"/>
+<path d="M340 263H936" stroke="#e2f9ff" stroke-width="4" opacity=".58"/>
+<path d="M340 301H936" stroke="#b6ebf8" stroke-width="3" opacity=".33"/>
+<rect x="318" y="253" width="21" height="56" rx="5" fill="url(#metal)" stroke="#a1c8d6"/>
+<rect x="940" y="253" width="20" height="56" rx="5" fill="url(#metal)" stroke="#a1c8d6"/>
+<!-- syringe and injector -->
+<path d="M461 188V280" stroke="#f58cac" stroke-width="5"/>
+<rect x="442" y="154" width="38" height="52" rx="6" fill="#e5a1b8" fill-opacity=".4" stroke="#ffbbcb" stroke-width="2"/>
+<rect x="449" y="167" width="24" height="32" rx="2" fill="#ff6993" fill-opacity=".55"/>
+<path d="M461 137V153M449 137H473" stroke="#eaf3fa" stroke-width="5"/>
+<path d="M461 204V256" stroke="#eeb7cc" stroke-width="3"/>
+<!-- outlet and valve -->
+<path d="M960 281H1031V318" stroke="#8bd4ed" stroke-width="26" stroke-linecap="round" fill="none"/>
+<path d="M960 281H1031V318" stroke="#287595" stroke-width="18" stroke-linecap="round" fill="none"/>
+<rect x="978" y="265" width="38" height="32" rx="6" fill="url(#metal)" stroke="#c2e0eb"/>
+<path d="M998 266V241" stroke="#8eabc1" stroke-width="7"/>
+<g id="valveWheel" transform="translate(998 238)"><circle r="19" fill="#16364c" stroke="#abc7d8" stroke-width="7"/><circle r="5" fill="#b9d8e7"/><path d="M-13 0H13M0-13V13" stroke="#acd7e8" stroke-width="4"/></g>
+<!-- collecting cylinder appears only when collection starts -->
+<g id="collectionApparatus" visibility="hidden">
+  <path id="fallingStream" d="M1031 315V345" fill="none" stroke="#98e5f7" stroke-opacity=".9" stroke-width="7" stroke-linecap="round" visibility="hidden"/>
+  <path d="M994 324H1072L1067 374H998Z" fill="#c8ecf6" fill-opacity=".14" stroke="#d5eaf5" stroke-width="2.5"/>
+  <path id="collectedWater" d="M1001 373H1064V373H1001Z" fill="#62badb" fill-opacity=".72"/>
+  <g stroke="#d5f4fa" stroke-width="1.5" opacity=".93">
+    <path d="M1000 362h13M1000 350h13M1000 338h13"/>
+  </g>
+  <g font-family="system-ui" font-size="9" fill="#d4edf7"><text x="1015" y="362">100</text><text x="1015" y="350">200</text><text x="1015" y="338">300</text></g>
+  <text x="988" y="367" fill="#e4f4fa" font-size="10" text-anchor="end">mL</text>
+</g>
+<!-- labels -->
+<g fill="#d5effc" font-family="system-ui" font-size="14"><text x="176" y="33" text-anchor="middle">RESERVORIO</text><text x="242" y="247" font-size="12">Salida inferior</text><text x="461" y="125" text-anchor="middle">INYECTOR</text><text x="660" y="243" text-anchor="middle">TUBERÍA TRANSPARENTE</text><text x="997" y="208" text-anchor="middle">VÁLVULA</text></g>
+</svg><canvas id="flowCanvas" width="1120" height="380"></canvas><small id="flowLabel">Agua circulando · tinta no inyectada</small></div>
+</section>
+<div class="controls"><section class="panel"><div class="toprow"><h2>Controles del experimento</h2><span class="micro">Manipula la instalación</span></div><div class="controlgrid">
+<div class="control"><label for="q">Apertura de válvula <b id="qValue"></b></label><input id="q" type="range" min="0.05" max="3" step="0.05" value="0.60"></div>
+<div class="fixed-setting"><span>Diámetro interior D</span><strong id="dValue">10 mm</strong><small>Propiedad fija del tubo</small></div>
+<div class="fixed-setting"><span>Temperatura del agua</span><strong id="tValue">20 °C</strong><small>Viscosidad cinemática ν = 1,004 × 10⁻⁶ m²/s</small></div></div>
+<div class="buttons"><button class="primary" id="dyeButton">Inyectar tinta</button><button id="resetButton">Reiniciar</button></div></section>
+<section class="panel"><div class="toprow"><h2>Medición virtual</h2><span class="micro">Probeta y cronómetro</span></div><p class="footnote">Mantén fija la válvula y recolecta agua en una probeta virtual, para medir el caudal para cierta apertura.</p><div class="metrics" style="grid-template-columns:repeat(3,minmax(0,1fr))"><div class="metric"><span>Volumen</span><strong id="volumeReading">0 mL</strong></div><div class="metric"><span>Tiempo transcurrido</span><strong id="timeReading">0,0 s</strong></div><div class="metric"><span>Estado</span><strong id="collectionStatus">Sin iniciar</strong></div></div><div class="buttons"><button class="primary" id="startCollection">Iniciar recolección</button><button id="stopCollection" disabled>Detener</button><button id="clearCollection">Retirar / vaciar probeta</button></div><p class="measurement-help">Conversión: <b>1 mL = 10⁻³ L = 10⁻⁶ m³</b></p></section></div>
+<section id="analyze" class="hidden" aria-hidden="true"><div class="toprow" style="margin:18px 0 12px"><h2>Analizar el flujo</h2><span class="micro">Navier–Stokes y condiciones del flujo</span></div><section class="equation-stage"><div class="micro" style="text-align:center">Ley de conservación del momentum · fluido newtoniano e incompresible</div><h3>Navier–Stokes: identifica cada término</h3><div class="eq" id="vectorEquation"></div><div class="termkey"><span class="key" style="--tc:var(--local)">Azul · Aceleración local</span><span class="key" style="--tc:var(--conv)">Violeta · Convección</span><span class="key" style="--tc:var(--pressure)">Verde · Presión</span><span class="key" style="--tc:var(--visc)">Naranja · Viscosidad</span><span class="key" style="--tc:var(--grav)">Gris · Gravedad</span></div></section>
+<div class="analysis-grid"><section class="panel"><div class="sectiontitle"><h2>Hipótesis y consecuencias</h2><button id="clearHyp">Limpiar</button></div><p style="font-size:12px">Estamos reduciendo la <b>componente axial (x)</b> de Navier–Stokes en un tubo circular. Las hipótesis describen el escenario, no se activan automáticamente por aumentar Re.</p><div class="hyp-grid">
+<label class="hyp"><input id="steady" type="checkbox"><span><b>Steady</b><small>∂u/∂t = 0 · no cambia con el tiempo</small></span></label>
+<label class="hyp"><input id="unidir" type="checkbox"><span><b>Unidirectional</b><small>Solo velocidad axial u</small></span></label>
+<label class="hyp"><input id="developed" type="checkbox"><span><b>Fully developed</b><small>∂u/∂x = 0</small></span></label>
+<label class="hyp"><input id="horizontal" type="checkbox" checked><span><b>Horizontal pipe</b><small>gₓ = 0 · gravedad sin componente axial</small></span></label>
+<label class="hyp"><input id="axisym" type="checkbox"><span><b>Axisymmetric</b><small>∂/∂θ = 0</small></span></label>
+<label class="hyp"><input id="incomp" type="checkbox" checked><span><b>Incompressible</b><small>∇ · V = 0 · densidad constante</small></span></label>
+</div><div class="display"><h3 id="visualTitle">Visualización: estado temporal</h3><svg id="hypVisual" viewBox="0 0 450 150" role="img" aria-label="Diagrama de interpretación física de la hipótesis"></svg><p id="visualExplain"></p></div><div id="assumptionWarning" class="note" style="margin-top:10px"></div></section>
+<section class="panel"><div class="sectiontitle"><h2>Desarrolla cada derivada</h2><span class="micro">Antes → simplificación → resultado</span></div>
+<div class="proof"><div class="micro">A · Componente x · coordenadas cartesianas</div><p class="footnote">Expande cada grupo y observa qué <b>subtérminos</b> quedan en cero. El color identifica su origen en la ecuación.</p><div class="termgroup"><h3>Aceleración local + aceleración convectiva</h3><div class="eq equation-expanded" id="inertiaExpanded"></div></div><div class="termgroup"><h3>Presión + difusión viscosa + gravedad axial</h3><div class="eq equation-expanded" id="forcesExpanded"></div></div><div class="legendstate"><span>Normal = se conserva</span><span>Tenue y tachado = cero exacto</span><span>Re no cancela automáticamente ningún término</span></div></div>
+<div class="proof"><div class="micro">B · ¿Qué se anuló exactamente?</div><div id="reasons"></div><div class="term-status-grid" id="termStatus"></div></div>
+<div class="proof"><div class="micro">C · Ecuación resultante</div><div class="eq" id="resultEquation"></div><div id="resultExplanation" class="status"></div></div>
+<div class="display"><h3>¿Qué se ve físicamente?</h3><div class="explainline"><div class="profilePanel"><b>Perfil axial en dos secciones</b><svg id="profileComparison" viewBox="0 0 390 130"></svg><p id="profileCaption" class="footnote"></p></div><div class="profilePanel"><b>Velocidad en un punto con el tiempo</b><svg id="timeComparison" viewBox="0 0 390 130"></svg><p id="timeCaption" class="footnote"></p></div></div></div>
+<div class="display"><h3>¿Qué significa Reynolds aquí?</h3><p id="reExplain"></p><div class="relative"><b>Inercia / viscosidad</b><div class="bar"><i id="scaleFill" style="width:50%;background:#8e9ce0"></i></div><strong id="ratioLabel">—</strong></div><p>La barra es una <b>guía cualitativa de escalas</b>, no una medición de cada término local. En flujo desarrollado la convección axial puede ser cero incluso para Re alto.</p></div></section></div>
+<section class="panel" style="margin-top:16px"><h2>Para el desarrollo del workshop</h2><p>Utiliza el análisis para razonar qué términos pueden anularse y <b>explica con tus propias palabras</b> las hipótesis. Escribe la ecuación reducida en tu entrega; esta aplicación no califica ni corrige tus respuestas.</p></section></section>
+
+</div><div id="navierView" class="hidden">
+<div class="heading"><div><div class="micro">WORKSHOP 5 · Differential Analysis</div><h1>Navier–Stokes</h1><p>Modifica las condiciones del flujo y observa cómo cambian los términos de la ecuación de Navier–Stokes.</p></div></div>
+<section class="panel" style="margin-bottom:16px"><div class="toprow"><h2>La tubería interactiva</h2><span class="micro">Mismo sistema · efectos vinculados</span></div><div class="ns-model-hypothesis" id="nsModelHypothesis"><strong>Hipótesis del modelo:</strong> flujo predominantemente axial: <em>v ≈ 0, w ≈ 0</em>. <span class="subtle">La contracción/expansión usa velocidades medias U(x) y continuidad; despreciar velocidades transversales allí es una aproximación, no una igualdad exacta.</span></div>
+<div class="ns-new-scene"><svg id="tubeSVG" viewBox="0 48 850 210" role="img" aria-label="Tubería horizontal o inclinada, con sección de entrada fija, salida modificable, partículas de flujo y flechas de velocidad">
+<defs><linearGradient id="tubeWaterNew" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#93c9d8" stop-opacity=".36"/><stop offset=".46" stop-color="#287b9e" stop-opacity=".53"/><stop offset="1" stop-color="#96c4d5" stop-opacity=".38"/></linearGradient><clipPath id="pipeClipNew"><path id="clipShapeNew"/></clipPath></defs>
+<g id="wholePipeNew"><path id="oldShapeNew" fill="none" stroke="#b6cbda" stroke-width="2" stroke-dasharray="8 7" opacity="0"/><path id="pipeShapeNew" fill="url(#tubeWaterNew)" stroke="#9fc7d4" stroke-width="3"/><g id="flowArrowsNew" clip-path="url(#pipeClipNew)"></g><g id="flowParticlesNew" clip-path="url(#pipeClipNew)"></g><path d="M56 144 H790" stroke="#91c8df" opacity=".3" stroke-dasharray="7 8" stroke-width="1.5"/><circle cx="184" cy="144" r="6" fill="#ffbc77" stroke="#fff0ce" stroke-width="1.5"/><text x="177" y="103" font-size="19" fill="#ffd8a9">P</text><text x="105" y="247" font-size="16" fill="#c8e2f0">Sección 1 · D₁ fijo</text><text x="602" y="247" font-size="16" fill="#c8e2f0">Sección 2 · D₂ variable</text><text id="u1LabelNew" x="120" y="119" font-size="19" fill="#b68cff">U₁</text><text id="u2LabelNew" x="652" y="119" font-size="19" fill="#b68cff">U₂</text></g>
+<path d="M818 25V100" stroke="#c2ced9" stroke-width="3"/><path d="M811 90l7 12 7-12" stroke="#c2ced9" stroke-width="3" fill="none"/><text x="825" y="35" fill="#c2ced9" font-size="19">g</text>
+</svg></div>
+<div class="ns-control-new"><div class="ns-field-new"><label for="nsTimeNew">Comportamiento temporal</label><select id="nsTimeNew"><option value="steady">Steady · velocidad estable en P</option><option value="unsteady">Unsteady · velocidad variable en P</option></select></div><div class="ns-field-new"><label for="nsShapeNew">Diámetro del tramo final</label><select id="nsShapeNew"><option value="same">D₂ = D₁</option><option value="contract">Contracción · D₂ &lt; D₁</option><option value="expand">Expansión · D₂ &gt; D₁</option></select></div><div class="ns-field-new"><label for="nsRateNew">Velocidad relativa (modelo laminar)</label><input id="nsRateNew" type="range" min="30" max="100" value="55"/><span id="nsRateLabel">0,55×</span></div><div class="ns-field-new"><label for="nsAngleNew">Inclinación</label><input id="nsAngleNew" type="range" min="-20" max="20" value="0" step="5"/><span id="nsAngleLabel">0°</span></div></div>
+<p class="footnote">Los cambios son ilustraciones de modelos simplificados. Presión/viscosidad se cuantifican solamente en el caso laminar completamente desarrollado; la contracción usa continuidad promedio y una aproximación ideal para presión.</p>
+</section>
+<section class="equation-stage"><div class="micro" style="text-align:center">Fluido newtoniano · incompresible · propiedades constantes</div><h3>Navier–Stokes · ecuación general</h3><div id="newVectorEquation" class="eq"><span class="math-term" data-newterm="local" style="--tc:var(--local)"><math><mi>ρ</mi><mfrac><mrow><mo>∂</mo><mover><mi>V</mi><mo>→</mo></mover></mrow><mrow><mo>∂</mo><mi>t</mi></mrow></mfrac></math></span><span class="symbol">+</span><span class="math-term" data-newterm="conv" style="--tc:var(--conv)"><math><mi>ρ</mi><mo>(</mo><mover><mi>V</mi><mo>→</mo></mover><mo>·</mo><mo>∇</mo><mo>)</mo><mover><mi>V</mi><mo>→</mo></mover></math></span><span class="symbol">=</span><span class="math-term" data-newterm="pressure" style="--tc:var(--pressure)"><math><mo>−</mo><mo>∇</mo><mi>p</mi></math></span><span class="symbol">+</span><span class="math-term" data-newterm="visc" style="--tc:var(--visc)"><math><mi>μ</mi><msup><mo>∇</mo><mn>2</mn></msup><mover><mi>V</mi><mo>→</mo></mover></math></span><span class="symbol">+</span><span class="math-term" data-newterm="grav" style="--tc:var(--grav)"><math><mi>ρ</mi><mover><mi>g</mi><mo>→</mo></mover></math></span></div>
+<div class="termkey"><button class="key ns-term-button" data-focus="local" style="--tc:var(--local)">Aceleración local</button><button class="key ns-term-button" data-focus="conv" style="--tc:var(--conv)">Convección</button><button class="key ns-term-button" data-focus="pressure" style="--tc:var(--pressure)">Presión</button><button class="key ns-term-button" data-focus="visc" style="--tc:var(--visc)">Viscosidad</button><button class="key ns-term-button" data-focus="grav" style="--tc:var(--grav)">Gravedad</button></div>
+
+<div class="ns-live-axial" aria-label="Componente axial desarrollada en tiempo real">
+  <div class="ns-live-head"><strong>Componente axial desarrollada · cambia con el experimento</strong><span>Para analizar derivadas en x</span></div>
+  <div class="ns-live-expression" id="nsLiveAxial"></div>
+  
+</div>
+
+</section>
+<section class="ns-interpret-new"><div class="panel"><div class="toprow"><h2 id="nsFocusHeadingNew">Viscosidad</h2></div><p id="nsFocusDescriptionNew" class="hidden"></p><svg viewBox="0 0 500 185" id="nsDetailGraphNew" role="img" aria-label="Gráfico del término seleccionado"></svg><div id="nsDetailCaptionNew" class="hidden"></div></div><div class="panel"><h2>Ecuaciones</h2><div id="nsDetailFormulaNew" class="ns-detail-formula"></div><p id="nsDetailReasonNew" class="hidden"></p></div></section>
+</div>
+</main>
+<script>
+'use strict';
+const $=id=>document.getElementById(id), MathML='http://www.w3.org/1998/Math/MathML';
+const state={q:.6,d:10,t:20,dye:false,lastQ:.6,direction:'—',records:[],phase:0};
+const viscosity=t=>{const samples=[[10,1.307],[15,1.139],[20,1.004],[25,.893],[30,.801],[35,.723]];let i=Math.min(4,Math.floor((t-10)/5));return (samples[i][1]+(samples[i+1][1]-samples[i][1])*(t-samples[i][0])/5)*1e-6};
+function readings(){const nu=viscosity(state.t),Q=state.q/60000,D=state.d/1000,U=4*Q/(Math.PI*D*D),Re=U*D/nu;return {nu,U,Re,reg:Re<2100?'Laminar':Re<4000?'Transición':'Turbulento'};}
+const fmt=(n,d=2)=>n.toLocaleString('es-CL',{minimumFractionDigits:d,maximumFractionDigits:d});
+const measure={active:false,visible:false,volume:0,elapsed:0,last:0,complete:false};
+function update(){const m=readings();$('qValue').textContent=Math.round((state.q-.05)/(3-.05)*100)+'%';$('dValue').textContent=state.d+' mm';$('tValue').textContent=state.t+' °C';$('regimePill').textContent='Clasifica el flujo observando la tinta';$('flowLabel').textContent=state.dye?'Inyección de tinta en curso':'Agua circulando · tinta no inyectada';$('valveWheel').setAttribute('transform',`translate(998 238) rotate(${state.q*88})`);renderAnalysis();}
+$('q').addEventListener('input',e=>{if(measure.active)return;const q=+e.target.value;if(q!==state.q)state.direction=q>state.q?'Aumentando':'Disminuyendo';state.lastQ=state.q;state.q=q;update()});
+$('dyeButton').addEventListener('click',()=>{state.dye=!state.dye;$('dyeButton').textContent=state.dye?'Detener tinta':'Inyectar tinta';update()});
+$('resetButton').addEventListener('click',()=>{dyes.length=0;dyeSpawn=0;Object.assign(state,{q:.6,d:10,t:20,dye:false,direction:'—'});$('q').value=.6;$('dyeButton').textContent='Inyectar tinta';measure.active=false;measure.volume=0;measure.elapsed=0;measure.complete=false;measure.visible=false;syncMeasure();update()});
+function syncMeasure(){
+$('volumeReading').textContent=fmt(measure.volume,1)+' mL';
+$('timeReading').textContent=fmt(measure.elapsed,1)+' s';
+$('collectionStatus').textContent=measure.active?'Recolectando':measure.complete?'Medición terminada':'Sin iniciar';
+$('startCollection').disabled=measure.active;$('stopCollection').disabled=!measure.active;$('clearCollection').disabled=measure.active;$('q').disabled=measure.active;
+$('collectionApparatus').setAttribute('visibility',measure.visible?'visible':'hidden');
+$('fallingStream').setAttribute('visibility',measure.active?'visible':'hidden');
+const p=Math.min(1,Math.max(0,measure.volume/350));const y=373-45*p;
+$('collectedWater').setAttribute('d',`M${1001-3*p} 373H${1064+3*p}L${1064+4*p} ${y}H${1001-4*p}Z`);
+}
+$('startCollection').onclick=()=>{measure.active=true;measure.visible=true;measure.volume=0;measure.elapsed=0;measure.complete=false;measure.last=performance.now();syncMeasure();};
+$('stopCollection').onclick=()=>{measure.active=false;measure.complete=measure.elapsed>0;syncMeasure();};
+$('clearCollection').onclick=()=>{if(measure.active)return;measure.volume=0;measure.elapsed=0;measure.complete=false;syncMeasure();};
+const MT={local:'var(--local)',conv:'var(--conv)',pressure:'var(--pressure)',visc:'var(--visc)',grav:'var(--grav)'};
+function eqTerm(kind,html,zero=false){return `<span class="math-term ${zero?'is-zero':''}" style="--tc:${MT[kind]}">${html}</span>`};
+function mml(fragment){return `<math xmlns="${MathML}" displaystyle="true">${fragment}</math>`};
+const frac=(top,bottom)=>`<mfrac><mrow>${top}</mrow><mrow>${bottom}</mrow></mfrac>`;
+const mi=s=>`<mi>${s}</mi>`,mo=s=>`<mo>${s}</mo>`,mn=s=>`<mn>${s}</mn>`,mrow=s=>`<mrow>${s}</mrow>`;
+const div=(top,bottom)=>mml(frac(top,bottom));
+const U=mi('u'), R=mi('r'), X=mi('x'), T=mi('t');
+const derivative=(top,bottom,order=1)=>frac(`${mo('∂')}${order===2?'<msup><mi></mi><mn>2</mn></msup>':''}${top}`,`${mo('∂')}${bottom}${order===2?'<msup><mi></mi><mn>2</mn></msup>':''}`);
+const diff=(v,w)=>mml(frac(`${mo('∂')}${mi(v)}`,`${mo('∂')}${mi(w)}`));
+const vectorParts=[eqTerm('local',mml(`${mi('ρ')}${frac(`${mo('∂')}${mi('𝐕')}`,`${mo('∂')}${mi('t')}`)}`)),`<span class="symbol">+</span>`,eqTerm('conv',mml(`${mi('ρ')}${mo('(')}${mi('𝐕')}${mo('·')}${mi('∇')}${mo(')')}${mi('𝐕')}`)),`<span class="symbol">=</span>`,eqTerm('pressure',mml(`${mo('−')}${mi('∇')}${mi('p')}`)),`<span class="symbol">+</span>`,eqTerm('visc',mml(`${mi('μ')}<msup><mi>∇</mi><mn>2</mn></msup>${mi('𝐕')}`)),`<span class="symbol">+</span>`,eqTerm('grav',mml(`${mi('ρ')}${mi('𝐠')}`))];$('vectorEquation').innerHTML=vectorParts.join('');
+const hyps=['steady','unidir','developed','horizontal','axisym','incomp'];hyps.forEach(id=>$(id).addEventListener('change',renderAnalysis));$('clearHyp').onclick=()=>{hyps.forEach(id=>$(id).checked=['horizontal','incomp'].includes(id));renderAnalysis()};
+function renderAnalysis(){
+const f=Object.fromEntries(hyps.map(id=>[id,$(id).checked]));
+const zero={local:f.steady,cx:f.developed,cy:f.unidir,cz:f.unidir,vx:f.developed,grav:f.horizontal};
+const term=(name,expr,isZero)=>eqTerm(name,mml(expr),isZero);
+const dx=(variable,axis,order=1)=>frac(`${order===2?'<msup><mi>∂</mi><mn>2</mn></msup>':mo('∂')}${mi(variable)}`,`${mo('∂')}${order===2?`<msup>${mi(axis)}${mn(2)}</msup>`:mi(axis)}`);
+const local=term('local',`${mi('ρ')}${dx('u','t')}`,zero.local);
+const cx=term('conv',`${mi('ρ')}${mi('u')}${dx('u','x')}`,zero.cx);
+const cy=term('conv',`${mi('ρ')}${mi('v')}${dx('u','y')}`,zero.cy);
+const cz=term('conv',`${mi('ρ')}${mi('w')}${dx('u','z')}`,zero.cz);
+const press=term('pressure',`${mo('−')}${dx('p','x')}`,false);
+const viscX=term('visc',`${mi('μ')}${dx('u','x',2)}`,zero.vx);
+const viscY=term('visc',`${mi('μ')}${dx('u','y',2)}`,false);
+const viscZ=term('visc',`${mi('μ')}${dx('u','z',2)}`,false);
+const grav=term('grav',`${mi('ρ')}${ms('g','x')}`,zero.grav);
+const plus='<span class="symbol">+</span>';
+$('inertiaExpanded').innerHTML=[local,plus,cx,plus,cy,plus,cz].join('');
+$('forcesExpanded').innerHTML=[press,plus,viscX,plus,viscY,plus,viscZ,plus,grav].join('');
+const terms=[['local','Aceleración local','ρ ∂u/∂t',zero.local,'Steady → ∂u/∂t = 0'],['conv','Convección axial','ρu ∂u/∂x',zero.cx,'Fully developed → ∂u/∂x = 0'],['conv','Convección transversal y','ρv ∂u/∂y',zero.cy,'Unidirectional → v = 0'],['conv','Convección transversal z','ρw ∂u/∂z',zero.cz,'Unidirectional → w = 0'],['pressure','Presión','−∂p/∂x',false,'No se elimina sin justificar ∂p/∂x = 0'],['visc','Viscosidad axial','μ ∂²u/∂x²',zero.vx,'Fully developed → ∂²u/∂x² = 0'],['visc','Viscosidad transversal y','μ ∂²u/∂y²',false,'Permanece, salvo condiciones adicionales'],['visc','Viscosidad transversal z','μ ∂²u/∂z²',false,'Permanece, salvo condiciones adicionales'],['grav','Gravedad axial','ρgₓ',zero.grav,'Tubería horizontal → gₓ = 0']];
+$('termStatus').innerHTML=terms.map(([kind,label,formula,off,why])=>`<div class="termstatus ${off?'zero':''}" style="--tc:${MT[kind]}"><strong>${label}</strong><div class="shortmath">${formula}</div><div class="state">${off?'Cero exacto':'Se conserva en el balance'}</div><small>${why}</small></div>`).join('');
+const reasons=[];if(f.steady)reasons.push(['Steady','∂u/∂t se anula porque el campo no cambia temporalmente.']);if(f.unidir)reasons.push(['Unidirectional','v = w = 0: desaparecen ambas convecciones transversales, no necesariamente la axial.']);if(f.developed)reasons.push(['Fully developed','∂u/∂x = 0 y ∂²u/∂x² = 0; desaparece la convección axial y solo la parte axial de difusión viscosa.']);if(f.horizontal)reasons.push(['Horizontal','gₓ = 0: solo se elimina la componente axial de gravedad.']);if(f.axisym)reasons.push(['Axisymmetric','No hay variación con θ; se usa al convertir el balance a coordenadas cilíndricas.']);if(f.incomp)reasons.push(['Incompressible','∇·V = 0 y ρ constante en este modelo. No elimina por sí sola términos del balance axial.']);$('reasons').innerHTML=reasons.length?reasons.map(([a,b])=>`<div class="reason"><b>${a}</b><span>${b}</span></div>`).join(''):'<p>Activa una hipótesis para ver qué términos se vuelven exactamente cero.</p>';
+const special=f.steady&&f.unidir&&f.developed&&f.horizontal&&f.axisym&&f.incomp;
+if(special){$('resultEquation').innerHTML='<span class="symbol">0 = </span>'+term('pressure',`${mo('−')}${frac(`${mi('d')}${mi('p')}`,`${mi('d')}${mi('x')}`)}`,false)+plus+term('visc',`${mi('μ')}${frac(mn('1'),mi('r'))}${frac(`${mi('d')}`,`${mi('d')}${mi('r')}`)}${mo('(')}${mi('r')}${frac(`${mi('d')}${mi('u')}`,`${mi('d')}${mi('r')}`)}${mo(')')}`,false);$('resultExplanation').textContent='Balance axial en coordenadas cilíndricas. Para Hagen–Poiseuille se requiere además flujo laminar y condiciones apropiadas de presión y paredes.';}
+else {const left=[!zero.local?'ρ ∂u/∂t':null,!zero.cx?'ρu ∂u/∂x':null,!zero.cy?'ρv ∂u/∂y':null,!zero.cz?'ρw ∂u/∂z':null].filter(Boolean);const right=['−∂p/∂x',!zero.vx?'μ ∂²u/∂x²':null,'μ ∂²u/∂y²','μ ∂²u/∂z²',!zero.grav?'ρgₓ':null].filter(Boolean);$('resultEquation').innerHTML=`<span class="symbol" style="font-family:Cambria,serif;font-size:clamp(19px,2vw,26px)">${left.join(' + ')||'0'} = ${right.join(' + ')}</span>`;$('resultExplanation').textContent='Resultado axial cartesiano con las hipótesis seleccionadas. La presión y los términos viscosos transversales no se eliminan por asumir flujo desarrollado.';}
+const warnings=[];if(!f.incomp)warnings.push('La ecuación de partida presupone incomprensibilidad y μ constante: si la desactivas, el modelo requiere otra formulación.');if(!f.unidir)warnings.push('Sin velocidad puramente axial pueden aparecer componentes transversales de transporte.');if(f.developed&&!f.unidir)warnings.push('Fully developed elimina la derivada axial, pero por sí sola no elimina la convección transversal.');if(f.axisym&&!f.unidir)warnings.push('La simetría angular por sí sola no impone velocidad transversal cero.');$('assumptionWarning').textContent=warnings.join(' ')||'Las hipótesis se aplican al balance axial; no se debe extrapolar cada anulación a toda la ecuación vectorial.';
+const r=readings();$('reExplain').textContent='El número de Reynolds compara escalas inerciales y viscosas. Su valor lo calculas tú a partir de la medición; no equivale a la magnitud instantánea de los términos.';const fraction=Math.min(1,Math.log10(Math.max(1,r.Re))/5);$('scaleFill').style.width=(fraction*100)+'%';$('ratioLabel').textContent='Escala cualitativa';
+$('profileComparison').innerHTML='<rect x="8" y="20" width="374" height="88" rx="10" fill="#164357" opacity=".45"/><path d="M82 22V107M288 22V107" stroke="#9cc7d9" stroke-width="2"/>'+`<path d="M82 24 Q${f.developed?'190':'155'} 64 82 105" fill="none" stroke="#ffb465" stroke-width="3"/>`+`<path d="M288 24 Q${f.developed?'396':'360'} 64 288 105" fill="none" stroke="${f.developed?'#ffb465':'#b68cff'}" stroke-width="3"/>`+'<text x="73" y="121" fill="#bdd8e6" font-size="12">x₁</text><text x="279" y="121" fill="#bdd8e6" font-size="12">x₂</text>';
+$('profileCaption').textContent=f.developed?'Fully developed: dos perfiles idénticos al avanzar por x.':'Demostración esquemática: si el flujo se desarrolla, el perfil puede cambiar con x.';
+$('timeComparison').innerHTML='<path d="M28 12V112H369" stroke="#91adbd" stroke-width="2" fill="none"/>'+ (f.steady?'<path d="M34 63H355" stroke="#58a9ff" stroke-width="4"/>':'<path d="M34 82Q90 82 130 67T235 44T355 27" stroke="#b68cff" stroke-width="4" fill="none"/>')+'<text x="352" y="126" fill="#b8d4e2" font-size="12">t</text>';
+$('timeCaption').textContent=f.steady?'Steady: velocidad constante en un punto fijo.':'Unsteady: ejemplo conceptual de velocidad que varía en un punto fijo.';
+renderHypVisual(f.developed?'developed':f.steady?'steady':f.unidir?'unidir':f.horizontal?'horizontal':'none',f);
+}
+
+function ms(base,sub){return `<msub>${mi(base)}${mi(sub)}</msub>`}
+function renderHypVisual(id,flags){const svg=$('hypVisual');const line=(d,color='#6dd8ef',width=3)=>`<path d="${d}" fill="none" stroke="${color}" stroke-width="${width}" stroke-linecap="round"/>`;let paths='';let title='',description='';if(flags.developed){title='Fully developed · perfiles iguales en x₁ y x₂';description='El perfil axial mantiene la misma forma al avanzar. Esto no implica que u sea igual en todos los radios.';paths=`<rect x="35" y="23" width="375" height="100" rx="12" fill="#1a536e" opacity=".35"/>${line('M60 25V122M363 25V122','#cfeafa',2)}${line('M60 28Q180 73 60 119','#ffbd7e')}${line('M363 28Q483 73 363 119','#ffbd7e')}<text x="52" y="142" fill="#d8eefc" font-size="12">x₁</text><text x="357" y="142" fill="#d8eefc" font-size="12">x₂</text>`;}else if(flags.steady){title='Steady · velocidad en un punto vs. tiempo';description='La velocidad puede cambiar de un punto a otro, pero en cada punto no cambia con el tiempo.';paths=line('M42 17V124H424','#88aabd',2)+line('M55 69H410','#58a9ff',5)+'<text x="355" y="54" fill="#bcdef4" font-size="13">u constante</text><text x="409" y="141" fill="#d8eefc">t</text>';}else if(flags.horizontal){title='Horizontal · gravedad perpendicular al eje';description='La gravedad sigue existiendo, pero su proyección sobre el eje horizontal es gₓ = 0.';paths='<rect x="40" y="68" width="335" height="32" rx="14" fill="#17506a" stroke="#a9d6e6"/>'+line('M80 84H330','#4fb9e7',4)+line('M200 19V58','#ffa86f',4)+'<path d="M194 50L200 61L206 50" fill="none" stroke="#ffa86f" stroke-width="3"/><text x="213" y="37" fill="#ffd4a4">g ↓</text>';}else if(flags.unidir){title='Unidirectional · solo componente axial';description='Las flechas indican movimiento paralelo al eje del tubo; velocidad radial y azimutal iguales a cero.';paths='<rect x="20" y="22" width="405" height="103" rx="14" fill="#135068" opacity=".55"/>'+[44,69,94].map(y=>line(`M60 ${y}H370`,'#5ccbe9',3)+`<path d="M360 ${y-6}L374 ${y}L360 ${y+6}" fill="none" stroke="#5ccbe9" stroke-width="3"/>`).join('');}else{title='Estado temporal · observar un punto fijo';description='Si la velocidad cambia con el tiempo, la aceleración local puede ser distinta de cero.';paths=line('M42 17V124H424','#88aabd',2)+line('M55 93Q100 85 135 105T215 67T300 68T404 30','#b68cff',4)+'<text x="410" y="140" fill="#d8eefc">t</text>';}$('visualTitle').textContent='Visualización · '+title;$('visualExplain').textContent=description;svg.innerHTML=paths;}
+// Independent browser-side visualization: stream markers inside connecting pipe and main tube.
+const canvas=$('flowCanvas'),ctx=canvas.getContext('2d');const particles=Array.from({length:115},(_,i)=>({x:330+Math.random()*620,y:266+Math.random()*30,s:Math.random()*2+1,alpha:Math.random()*.6+.15}));const feedParticles=Array.from({length:24},()=>({p:Math.random(),s:Math.random()*1.4+.7}));const dyes=[];let dyeSpawn=0;let previous=0;
+function draw(ts){const dt=Math.min(.05,(ts-previous)/1000||.016);previous=ts;if(measure.active){const delta=Math.min(.15,Math.max(0,(ts-measure.last)/1000));measure.last=ts;measure.elapsed+=delta;measure.volume+=state.q*1000/60*delta;if(measure.volume>=350){measure.volume=350;measure.active=false;measure.complete=true;}syncMeasure();}ctx.clearRect(0,0,1120,380);const {Re}=readings();const speed=.18+state.q*.75;state.phase+=dt*speed;const turbulence=Math.max(0,Math.min(1,(Re-1900)/2400));
+// Flow from reservoir downward, around elbow and into the glass pipe.
+for(const p of feedParticles){p.p=(p.p+dt*speed*p.s*.15)%1;const a=p.p*420;let x,y;if(a<50){x=177;y=208+a}else if(a<100){const theta=(a-50)/50*Math.PI/2;x=177+26*(1-Math.cos(theta));y=258+24*Math.sin(theta)}else{x=203+Math.min(130,(a-100)*.44);y=282}ctx.fillStyle='rgba(208,246,255,.72)';ctx.beginPath();ctx.arc(x,y,1.5,0,Math.PI*2);ctx.fill();}
+for(const p of particles){const radial=(p.y-281.5)/19;const shape=Math.max(.12,1-radial*radial);p.x+=dt*speed*90*shape*p.s;if(p.x>943)p.x=341;ctx.fillStyle=`rgba(208,246,252,${p.alpha})`;ctx.beginPath();ctx.ellipse(p.x,p.y,Math.max(1.5,speed*2.5),.85,0,0,Math.PI*2);ctx.fill();}
+if(state.dye){
+  // Continuous dye injection, initially concentrated near the capillary.
+  dyeSpawn+=dt*(230+state.q*45);
+  while(dyeSpawn>=1){
+    dyeSpawn--;
+    dyes.push({x:463,y:281,offset:(Math.random()-.5)*1.35,seed:Math.random()*6.283,velocity:.80+Math.random()*.4,age:0,alpha:.72+Math.random()*.2});
+  }
+}
+ctx.save();ctx.beginPath();ctx.rect(461,262,473,40);ctx.clip();
+const trans=Math.min(1,Math.max(0,(Re-1900)/1800));
+for(let i=dyes.length-1;i>=0;i--){
+ const p=dyes[i];p.age+=dt;
+ const ux=(.27+state.q*.37)*95*p.velocity;
+ p.x+=dt*ux;
+ const travel=Math.max(0,Math.min(1,(p.x-463)/430));
+ const develop=Math.pow(travel,.67);
+ // Transversal dye mixing is much stronger downstream at high Re.
+ const mixing=trans*develop;
+ const wobble=(Math.sin(p.age*6.0+p.seed)+.47*Math.sin(p.age*11.5+p.seed*1.7));
+ const cloudRadius=1.0+mixing*18.2;
+ const target=p.offset*(1+mixing*15)+wobble*mixing*3.3;
+ p.y+=(281+target-p.y)*Math.min(1,dt*(4+trans*4));
+ // For high Re, particles wander irregularly across the visible cross-section.
+ if(trans>.12){p.y+=(Math.random()-.5)*dt*trans*(5+17*travel);}
+ p.y=Math.max(263.7,Math.min(300.3,p.y));
+ const fade=Math.max(.12,Math.min(1,(946-p.x)/35));
+ // Halo creates a diffuse dye plume rather than a wavy solid pink line.
+ if(mixing>.04){
+   const halo=ctx.createRadialGradient(p.x,p.y,.3,p.x,p.y,2.4+mixing*5);
+   halo.addColorStop(0,`rgba(210,71,112,${.052*mixing*fade})`);
+   halo.addColorStop(1,'rgba(210,71,112,0)');
+   ctx.fillStyle=halo;ctx.beginPath();ctx.arc(p.x,p.y,2.4+mixing*5,0,6.283);ctx.fill();
+ }
+ ctx.fillStyle=`rgba(215,70,116,${p.alpha*fade*(.83-.38*mixing)})`;
+ ctx.beginPath();ctx.ellipse(p.x,p.y,1.45+mixing*1.05,.78+mixing*.8,0,0,6.283);ctx.fill();
+ if(p.x>950)dyes.splice(i,1);
+}
+// Semi-transparent coherent cloud with an irregular outer envelope, downstream only.
+if(state.dye&&trans>.2){
+ ctx.save();ctx.globalCompositeOperation='screen';
+ const startX=510, endX=928;
+ for(let k=0;k<65;k++){
+  const x=startX+k*(endX-startX)/64;
+  const a=Math.pow(Math.max(0,(x-463)/465),.67)*trans;
+  const y=281+Math.sin(x*.037-state.phase*4.3)*a*2.8;
+  const radius=Math.max(.5,17.5*a);
+  if(radius<1)continue;
+  const grad=ctx.createLinearGradient(0,y-radius,0,y+radius);
+  grad.addColorStop(0,'rgba(218,79,117,0)');
+  grad.addColorStop(.5,`rgba(210,70,113,${.017*a})`);
+  grad.addColorStop(1,'rgba(218,79,117,0)');
+  ctx.fillStyle=grad;ctx.fillRect(x,y-radius,7,radius*2);
+ }
+ ctx.restore();
+}
+ctx.restore();
+// Fluid entering through the injection capillary (not an instant full-pipe streak)
+if(state.dye){ctx.strokeStyle='rgba(213,83,116,.87)';ctx.lineWidth=2;ctx.beginPath();ctx.moveTo(461,224);ctx.lineTo(461,281);ctx.stroke();}
+
+requestAnimationFrame(draw)}requestAnimationFrame(draw);update();
+
+// WORKSHOP 5 - One coherent pipe and five linked physical interpretations
+const tabR=$('tabReynolds'),tabN=$('tabNavier');
+function selectWorkshopView(name){const r=name==='reynolds';$('reynoldsView').classList.toggle('hidden',!r);$('navierView').classList.toggle('hidden',r);tabR.classList.toggle('active',r);tabN.classList.toggle('active',!r);tabR.setAttribute('aria-selected',String(r));tabN.setAttribute('aria-selected',String(!r));window.scrollTo({top:0,behavior:'smooth'});}
+tabR.addEventListener('click',()=>selectWorkshopView('reynolds'));tabN.addEventListener('click',()=>selectWorkshopView('navier'));
+const nsState={time:'steady',shape:'same',rate:55,angle:0,focus:'pressure'};
+const nsColors={local:'#58a9ff',conv:'#b68cff',pressure:'#62d4aa',visc:'#ffb465',grav:'#a9bacd'};
+const nsLabel={local:'Aceleración local',conv:'Aceleración convectiva',pressure:'Gradiente de presión',visc:'Viscosidad',grav:'Gravedad axial'};
+const nsMarkup=(s)=>`<div class="ns-equation-formula">${s}</div>`;
+function pipePath(h){return `M55  ${144-55} H410 Q468 ${144-55} 512 ${144-h} H792 V${144+h} H512 Q468 ${144+55} 410 ${144+55} H55 Z`}
+function nsRatio(){return nsState.shape==='contract'?.64:nsState.shape==='expand'?1.42:1;}
+function setPipeGeometry(){const h=55*nsRatio(),pipe=pipePath(h);$('pipeShapeNew').setAttribute('d',pipe);$('clipShapeNew').setAttribute('d',pipe);$('oldShapeNew').setAttribute('d',pipePath(55));$('oldShapeNew').style.opacity=nsState.shape==='same'?'0':'.6';$('wholePipeNew').setAttribute('transform',`rotate(${-nsState.angle} 425 144)`);const u1=nsState.rate/55,u2=u1/(nsRatio()**2);$('u1LabelNew').textContent='U₁';$('u2LabelNew').textContent=nsState.shape==='same'?'U₂ = U₁':nsState.shape==='contract'?'U₂ > U₁':'U₂ < U₁';let arrows='';for(let j=0;j<3;j++){const x=116+j*110,L=24+u1*15;arrows+=`<path d="M${x} 144h${L}m-9 -6l9 6-9 6" fill="none" stroke="#b68cff" stroke-width="3.5" stroke-linecap="round"/>`;}for(let j=0;j<3;j++){const x=560+j*67,L=Math.min(58,19+u2*16);arrows+=`<path d="M${x} 144h${L}m-9 -6l9 6-9 6" fill="none" stroke="#b68cff" stroke-width="3.5" stroke-linecap="round"/>`;} $('flowArrowsNew').innerHTML=arrows;
+$('nsRateLabel').textContent=(nsState.rate/100).toFixed(2).replace('.',',')+'×';$('nsAngleLabel').textContent=nsState.angle+'°';}
+function renderLiveAxial(){
+  const s=nsState;
+  // x is along the pipe, pointing downstream. Flow is assumed incompressible,
+  // Newtonian, with constant rho and mu. Extra reductions require extra hypotheses.
+  const steady=s.time==='steady',straight=s.shape==='same';
+  const developed=steady&&straight; // our reference straight case, after the entrance region
+  const gx=-9.81*Math.sin(s.angle*Math.PI/180);
+  const rate=s.rate/55,geo=Math.abs(1/nsRatio()**2-1);
+  const focus=s.focus;
+  const math=(body)=>`<math xmlns="http://www.w3.org/1998/Math/MathML"><mrow>${body}</mrow></math>`;
+  const mi=(v)=>`<mi>${v}</mi>`,mo=(v)=>`<mo>${v}</mo>`;
+  const frac=(numer,denom)=>`<mfrac><mrow>${numer}</mrow><mrow>${denom}</mrow></mfrac>`;
+  const d=(a,b,n=1)=>frac((n===2?'<msup><mo>∂</mo><mn>2</mn></msup>':mo('∂'))+mi(a),(n===2?'<msup><mo>∂</mo><mn>2</mn></msup>':mo('∂'))+mi(b));
+  const colors={local:'#58a9ff',conv:'#b68cff',pressure:'#62d4aa',visc:'#ffb465',grav:'#a9bacd'};
+  const t=(k,body,isZero=false,title='',isApprox=false)=>`<span class="ns-axterm ${isZero?'zero':''} ${isApprox?'approx':''} ${focus===k?'focus':''}" data-axterm="${k}" title="${title}" style="--tc:${colors[k]}">${math(body)}</span>`;
+  const op=(v)=>`<span class="ns-axop">${v}</span>`;
+  const add=(items)=>items.join(op('+'));
+  const loc=t('local',`${mi('ρ')}${d('u','t')}`,steady,'Steady: derivada temporal nula');
+  const conv=add([t('conv',`${mi('ρ')}${mi('u')}${d('u','x')}`,developed,'Fully developed: ∂u/∂x = 0'),t('conv',`${mi('ρ')}${mi('v')}${d('u','y')}`,developed,'Recta desarrollada: v=0 exacto; otros casos: término despreciado en aproximación 1D',!developed),t('conv',`${mi('ρ')}${mi('w')}${d('u','z')}`,developed,'Recta desarrollada: w=0 exacto; otros casos: término despreciado en aproximación 1D',!developed)]);
+  const press=t('pressure',`${mo('−')}${d('p','x')}`,false,'Gradiente de presión axial');
+  const vis=add([t('visc',`${mi('μ')}${d('u','x',2)}`,developed,'Fully developed: ∂²u/∂x² = 0'),t('visc',`${mi('μ')}${d('u','y',2)}`,false,'Difusión viscosa transversal'),t('visc',`${mi('μ')}${d('u','z',2)}`,false,'Difusión viscosa transversal')]);
+  // Projection of rho*g in the axial direction; not the full gravity vector.
+  const grav=t('grav',`${mo('−')}${mi('ρ')}${mi('g')}${mo('sin')}${mo('(')}${mi('α')}${mo(')')}`,s.angle===0,'g_x = −g sin α; α positivo cuando el conducto asciende');
+  $('nsLiveAxial').innerHTML=`<span class="ns-ax-group">${loc}${op('+')}${conv}</span>${op('=')}<span class="ns-ax-group">${press}${op('+')}${vis}${op('+')}${grav}</span>`;
+  const status=[];
+  status.push(steady?'∂u/∂t = 0 (steady)':'∂u/∂t puede cambiar de signo (unsteady)');
+  status.push(developed?'Recta desarrollada: ∂u/∂x = 0 y v = w = 0 (exactos en el modelo)':'Aproximación 1D axial: v ≈ w ≈ 0 (despreciados, no ceros exactos); se conserva u ∂u/∂x y también cambia ∂p/∂x');
+  status.push(s.angle===0?'gₓ = 0 (horizontal)':'gₓ = −g sen('+s.angle+'°) = '+gx.toFixed(2).replace('.',',')+' m/s²');
+
+  $('nsModelHypothesis').innerHTML=developed?'<strong>Hipótesis del modelo:</strong> tramo recto, unidireccional y completamente desarrollado: <em>v = w = 0</em> y <em>∂u/∂x = 0</em>. <span class="subtle">Los términos tachados se anulan bajo estas hipótesis; la viscosidad radial sigue actuando.</span>':'<strong>Hipótesis del modelo:</strong> flujo predominantemente axial: <em>v ≈ 0, w ≈ 0</em>. <span class="subtle">En contracción y expansión se aproxima con velocidades medias U(x) y continuidad. Los términos transversales se desprecian (≈0), no se declaran nulos; la convección axial se conserva.</span>'; 
+  document.querySelectorAll('[data-axterm]').forEach(el=>{
+    let impact=1;
+    if(el.dataset.axterm==='local'&&!steady)impact=1.07;
+    if(el.dataset.axterm==='conv'&&!developed)impact=1.04+Math.min(.09,geo*.05);
+    if(el.dataset.axterm==='grav'&&s.angle!==0)impact=1+Math.min(.12,Math.abs(gx)/9.81*.23);
+    if(el.classList.contains('zero'))impact=.92;
+    el.style.setProperty('--impact',String(impact));
+  });
+}
+
+function renderNewNS(){setPipeGeometry();renderLiveAxial();const s=nsState;document.querySelectorAll('.ns-term-button').forEach(b=>b.classList.toggle('ns-term-selected',b.dataset.focus===s.focus));const zero={local:s.time==='steady',conv:s.time==='steady'&&s.shape==='same',pressure:false,visc:false,grav:false};
+
+const emph=s.focus;
+document.querySelectorAll('[data-newterm]').forEach(el=>{const k=el.dataset.newterm; const geometryPair=(s.focus==='conv' && s.shape!=='same' && (k==='conv' || k==='pressure')); const ratePair=(s.focus==='visc' && (k==='pressure' || k==='visc' || (k==='conv' && s.shape!=='same'))); const active=(emph===k)||geometryPair||ratePair; el.classList.toggle('is-zero',zero[k]);el.classList.toggle('ns-highlight',active&&!zero[k]);el.classList.toggle('ns-soft',!active&&!zero[k]);el.classList.toggle('ns-emphasis',active&&!zero[k]);el.classList.toggle('ns-secondary',!active&&!zero[k]);el.setAttribute('aria-label',nsLabel[k]+(zero[k]?' (cero bajo las hipótesis)':' (no se presupone cero)'));});
+const feedback={local:s.time==='steady'?['Steady: aceleración local nula','La velocidad en P no cambia con el tiempo: ∂u/∂t = 0.']:['Caudal variable: aceleración local','El agua siempre avanza; su rapidez aumenta y disminuye. La aceleración local y el término azul cambian continuamente de magnitud y signo.'],conv:s.shape==='same'?['Diámetro uniforme: sin aceleración convectiva axial desarrollada','D₁ = D₂ y U₁ = U₂; en flujo plenamente desarrollado y estacionario se anula la convección axial.']:s.shape==='contract'?['Contracción: el agua acelera espacialmente','D₂ < D₁, por continuidad U₂ > U₁. Convección axial positiva en el modelo estacionario unidimensional.']:['Expansión: el agua desacelera espacialmente','D₂ > D₁, por continuidad U₂ < U₁. Convección axial negativa en el modelo estacionario unidimensional.'],pressure:s.shape==='same'?['La presión impulsa el flujo','En la sección recta laminar desarrollada, la caída de presión equilibra la contribución viscosa.']:['La presión también cambia al cambiar la sección','Si cambian U₁ y U₂, también cambia la presión estática en el modelo ideal. Por eso aquí se marca junto con convección.'],visc:['El caudal modifica el balance','Al aumentar la velocidad laminar desarrollada, aumentan en magnitud el término viscoso y el gradiente de presión requerido. La convección axial solo aparece cuando cambia la sección.'],grav:s.angle===0?['Tubo horizontal: gravedad axial cero','gₓ = 0, aunque el vector gravedad de la ecuación general sigue existiendo.']:['Tubo inclinado: aparece gravedad axial','gₓ = −g sen(α). La componente axial cambia de signo al invertir la inclinación.']};
+const [cause,effect]=feedback[emph];
+const straight=s.shape==='same',steady=s.time==='steady',horiz=s.angle===0;
+
+$('nsFocusHeadingNew').textContent=nsLabel[s.focus];let desc='',caption='',formula='',reason='';const rate=s.rate/55;
+if(s.focus==='local'){desc=steady?'En el punto fijo P la velocidad no varía con el tiempo.':'En P la rapidez aumenta y disminuye, siempre hacia adelante. La flecha y la intensidad del término azul responden en tiempo real.';caption='Velocidad axial en el punto P frente al tiempo (ilustración de oscilación temporal).';formula='∂u/∂t';reason=steady?'STEADY: ∂u/∂t = 0. No significa que u sea igual en todas las posiciones.':'UNSTEADY: ∂u/∂t puede ser distinto de cero. El signo depende de si el flujo acelera o desacelera en P.';}
+if(s.focus==='conv'){desc='La parte inicial conserva D₁ y solo cambia D₂. Las flechas muestran U₁ y U₂, calculadas de continuidad promedio.';caption='Velocidad promedio a lo largo de la tubería, para caudal constante. Ilustración unidimensional.';formula='U₁A₁ = U₂A₂   ·   a₍conv,x₎ ≈ U dU/dx';reason=straight?'Sección constante: en el caso steady, unidireccional y fully developed la convección axial es cero.':s.shape==='contract'?'Contracción: U₂ > U₁, aceleración espacial axial positiva en la aproximación 1D.':'Expansión: U₂ < U₁, aceleración espacial axial negativa en la aproximación 1D. Signo negativo no significa menor magnitud.';}
+if(s.focus==='pressure'){desc='Para una contracción/expansión idealizada, la presión estática cambia con la velocidad. En tubería recta desarrollada, presión y viscosidad se equilibran.';caption=straight?'Caída de presión axial ilustrativa para Hagen–Poiseuille.':'Relación conceptual entre presión estática y velocidad (aproximación ideal, sin pérdidas).';formula=straight?'−dp/dx = 8 μ U / R²':'p₁ + ½ρU₁² ≈ p₂ + ½ρU₂²';reason=straight?'En flujo laminar completamente desarrollado, una velocidad mayor requiere mayor gradiente de presión en magnitud; la aceleración axial sigue siendo cero.':'La relación de Bernoulli es una aproximación ideal; una expansión real puede presentar pérdidas y separación. No se calcula una presión exacta con solo el dibujo.';}
+if(s.focus==='visc'){desc='Tres respuestas al control de velocidad media U: perfil de velocidad, esfuerzo cortante y contribución viscosa axial.';caption='Una sola gráfica con tres escalas horizontales independientes y posición radial compartida. Las curvas cambian con U; no se comparan entre sí valores de unidades distintas.';formula='<div class="eqline"><span class="eqtag" style="color:#58a9ff">1. Velocidad axial</span><math><mi>u</mi><mo>(</mo><mi>r</mi><mo>)</mo><mo>=</mo><mn>2</mn><mi>U</mi><mo>(</mo><mn>1</mn><mo>−</mo><mfrac><msup><mi>r</mi><mn>2</mn></msup><msup><mi>R</mi><mn>2</mn></msup></mfrac><mo>)</mo></math></div><div class="eqline"><span class="eqtag" style="color:#b68cff">2. Esfuerzo cortante</span><math><msub><mi>τ</mi><mrow><mi>r</mi><mi>x</mi></mrow></msub><mo>=</mo><mi>μ</mi><mfrac><mrow><mi>d</mi><mi>u</mi></mrow><mrow><mi>d</mi><mi>r</mi></mrow></mfrac><mo>=</mo><mo>−</mo><mfrac><mrow><mn>4</mn><mi>μ</mi><mi>U</mi><mi>r</mi></mrow><msup><mi>R</mi><mn>2</mn></msup></mfrac></math></div><div class="eqline"><span class="eqtag" style="color:#ffb465">3. Término viscoso axial de Navier–Stokes</span><math><mi>μ</mi><mfrac><mn>1</mn><mi>r</mi></mfrac><mfrac><mi>d</mi><mrow><mi>d</mi><mi>r</mi></mrow></mfrac><mo>(</mo><mi>r</mi><mfrac><mrow><mi>d</mi><mi>u</mi></mrow><mrow><mi>d</mi><mi>r</mi></mrow></mfrac><mo>)</mo><mo>=</mo><mo>−</mo><mfrac><mrow><mn>8</mn><mi>μ</mi><mi>U</mi></mrow><msup><mi>R</mi><mn>2</mn></msup></mfrac></math></div><p style="font:12px system-ui;color:#b8d0df;margin-top:12px"><strong>U</strong>: velocidad promedio · <strong>R</strong>: radio del tubo · <strong>r</strong>: posición radial · <strong>μ</strong>: viscosidad dinámica.</p>';reason='';if(!straight||!steady)reason='Referencia: las tres expresiones corresponden al caso recto, estacionario y laminar completamente desarrollado.';}
+if(s.focus==='grav'){desc='La gravedad siempre apunta hacia abajo. Cambiar la inclinación modifica su componente paralela al eje del tubo.';caption='Componente axial de la gravedad frente a la inclinación del tubo.';formula='gₓ = −g sin(α)';reason=horiz?'Tubería horizontal: gₓ = 0. La gravedad total sigue existiendo y afecta el balance transversal.':s.angle>0?'Tubo ascendente hacia la derecha: gₓ < 0.':'Tubo descendente hacia la derecha: gₓ > 0.';}
+
+// Solo visualizaciones y expresiones matemáticas: sin interpretación anticipada.
+const mathExpression=(body,label='')=>`<div class="eqline">${label?`<span class="eqtag">${label}</span>`:''}<math display="block" xmlns="http://www.w3.org/1998/Math/MathML">${body}</math></div>`;
+const frac=(top,bottom)=>`<mfrac><mrow>${top}</mrow><mrow>${bottom}</mrow></mfrac>`;
+const v='<mi>u</mi>', d='<mi>d</mi>', dx='<mi>x</mi>', dt='<mi>t</mi>', DU='<mi>U</mi>';
+if(s.focus==='local'){
+ formula=mathExpression(`<mi>ρ</mi>${frac('<mo>∂</mo><mi>u</mi>','<mo>∂</mo><mi>t</mi>')}`,'Aceleración local');
+}
+if(s.focus==='conv'){
+ formula=mathExpression(`<msub><mi>U</mi><mn>1</mn></msub><msub><mi>A</mi><mn>1</mn></msub><mo>=</mo><msub><mi>U</mi><mn>2</mn></msub><msub><mi>A</mi><mn>2</mn></msub>`,'Continuidad') +
+ mathExpression(`<mi>ρ</mi><mi>U</mi>${frac('<mi>d</mi><mi>U</mi>','<mi>d</mi><mi>x</mi>')}`,'Convección axial (modelo 1D)');
+}
+if(s.focus==='pressure'){
+ formula=straight?
+ mathExpression(`<mo>−</mo>${frac('<mi>d</mi><mi>p</mi>','<mi>d</mi><mi>x</mi>')}<mo>=</mo>${frac('<mn>8</mn><mi>μ</mi><mi>U</mi>','<msup><mi>R</mi><mn>2</mn></msup>')}`,'Tubería recta · flujo laminar desarrollado'):
+ mathExpression(`<msub><mi>p</mi><mn>1</mn></msub><mo>+</mo>${frac('<mn>1</mn>','<mn>2</mn>')}<mi>ρ</mi><msubsup><mi>U</mi><mn>1</mn><mn>2</mn></msubsup><mo>≈</mo><msub><mi>p</mi><mn>2</mn></msub><mo>+</mo>${frac('<mn>1</mn>','<mn>2</mn>')}<mi>ρ</mi><msubsup><mi>U</mi><mn>2</mn><mn>2</mn></msubsup>`,'Aproximación ideal · sin pérdidas');
+}
+if(s.focus==='grav'){
+ formula=mathExpression(`<msub><mi>g</mi><mi>x</mi></msub><mo>=</mo><mo>−</mo><mi>g</mi><mi>sin</mi><mo>(</mo><mi>α</mi><mo>)</mo>`,'Componente axial')+
+ mathExpression(`<mi>ρ</mi><msub><mi>g</mi><mi>x</mi></msub><mo>=</mo><mo>−</mo><mi>ρ</mi><mi>g</mi><mi>sin</mi><mo>(</mo><mi>α</mi><mo>)</mo>`,'Término en Navier–Stokes');
+}
+
+$('nsFocusDescriptionNew').textContent=desc;$('nsDetailCaptionNew').textContent=caption;$('nsDetailFormulaNew').innerHTML=formula;$('nsDetailReasonNew').textContent=reason;
+renderNSDetailGraph();}
+function renderNSDetailGraph(){let g='<path d="M45 16V155H476" stroke="#8ba9bc" stroke-width="2" fill="none"/>',s=nsState,pts=[];const f=s.focus;
+if(f==='local'){for(let i=0;i<=70;i++){const x=46+i*6,y=s.time==='steady'?79:79-24*Math.sin(i*.18);pts.push(`${x},${y}`);}g+=`<polyline points="${pts.join(' ')}" fill="none" stroke="${nsColors.local}" stroke-width="4"/><text x="455" y="173" fill="#bfd6e4" font-size="14">t</text><text x="13" y="18" fill="#bfd6e4" font-size="14">u(P)</text>`;}
+else if(f==='conv'){for(let i=0;i<=70;i++){let t=i/70,R=nsRatio(),trans=Math.max(0,Math.min(1,(t-.43)/.22)),d=1+(R-1)*trans,U=(s.rate/55)/(d*d),y=145-Math.min(100,U*37);pts.push(`${46+i*6},${y}`);}g+=`<polyline points="${pts.join(' ')}" fill="none" stroke="${nsColors.conv}" stroke-width="4"/><text x="454" y="173" fill="#bfd6e4" font-size="14">x</text><text x="8" y="18" fill="#bfd6e4" font-size="14">U</text>`;}
+else if(f==='visc'){
+ // Three separate horizontal scales share one radial coordinate. This prevents
+ // numerically equating quantities with incompatible physical dimensions.
+ const q=Math.max(.1,s.rate/55), y0=35, h=108;
+ const panels=[{x:98,w:104,color:'#58a9ff',label:'u(r)',value:r=>q*(1-r*r),scale:2.0},
+ {x:227,w:104,color:'#b68cff',label:'τrx(r)',value:r=>-q*r,scale:2.0,signed:true},
+ {x:356,w:104,color:'#ffb465',label:'|fvisc|',value:r=>q,scale:2.0}];
+ g='';
+ g+=`<text x="10" y="29" fill="#b8d4e4" font-size="12">Pared</text><text x="10" y="93" fill="#b8d4e4" font-size="12">Centro</text><text x="10" y="148" fill="#b8d4e4" font-size="12">Pared</text>`;
+ for(const pan of panels){
+   const mid=pan.signed?pan.x+pan.w/2:pan.x;
+   g+=`<rect x="${pan.x-7}" y="16" width="${pan.w+14}" height="144" rx="7" fill="#142a3b" stroke="#34566c"/>`;
+   g+=`<line x1="${mid}" y1="${y0}" x2="${mid}" y2="${y0+h}" stroke="#7c9dad" stroke-dasharray="3 4" opacity=".65"/>`;
+   g+=`<line x1="${pan.x}" y1="${y0+h/2}" x2="${pan.x+pan.w}" y2="${y0+h/2}" stroke="#7c9dad" stroke-dasharray="3 4" opacity=".38"/>`;
+   const points=[];
+   for(let i=0;i<=80;i++){const r=-1+2*i/80;const value=pan.value(r);
+      const x=pan.signed?(pan.x+pan.w/2+value*pan.w/(2*pan.scale)):(pan.x+value*pan.w/pan.scale);
+      points.push(`${x.toFixed(2)},${(y0+i*h/80).toFixed(2)}`);}
+   g+=`<polyline points="${points.join(' ')}" fill="none" stroke="${pan.color}" stroke-width="3.3" stroke-linejoin="round" stroke-linecap="round"/>`;
+   g+=`<text x="${pan.x+pan.w/2}" y="12" text-anchor="middle" fill="${pan.color}" font-size="13">${pan.label}</text>`;
+ }
+ g+='<text x="150" y="178" fill="#a8c1d0" font-size="11" text-anchor="middle">Velocidad</text><text x="279" y="178" fill="#a8c1d0" font-size="11" text-anchor="middle">Esfuerzo</text><text x="408" y="178" fill="#a8c1d0" font-size="11" text-anchor="middle">Fuerza / vol.</text>';
+}
+else if(f==='pressure'){let R=nsRatio(),U1=s.rate/55,U2=U1/R**2;for(let i=0;i<=70;i++){let t=i/70,pressure=s.shape==='same'?1-.52*t:1-.18*t-.32*(U2*U2-U1*U1)*Math.max(0,Math.min(1,(t-.43)/.22));pts.push(`${46+i*6},${Math.max(25,Math.min(145,145-90*pressure))}`)}g+=`<polyline points="${pts.join(' ')}" fill="none" stroke="${nsColors.pressure}" stroke-width="4"/><text x="454" y="173" fill="#bfd6e4" font-size="14">x</text><text x="12" y="18" fill="#bfd6e4" font-size="14">p</text>`;}
+else {for(let i=0;i<=70;i++){let angle=-20+i*40/70,gx=-9.81*Math.sin(angle*Math.PI/180),y=84-gx*22;pts.push(`${46+i*6},${y}`);}g+=`<polyline points="${pts.join(' ')}" fill="none" stroke="${nsColors.grav}" stroke-width="4"/><text x="426" y="173" fill="#bfd6e4" font-size="14">α</text><text x="5" y="18" fill="#bfd6e4" font-size="14">gₓ</text>`;}
+$('nsDetailGraphNew').innerHTML=g;}
+function rateClamp(v){return Math.max(.1,Math.min(1.55,v))}
+const nsInputs={time:$('nsTimeNew'),shape:$('nsShapeNew'),rate:$('nsRateNew'),angle:$('nsAngleNew')};Object.entries(nsInputs).forEach(([k,el])=>el.addEventListener(k==='rate'||k==='angle'?'input':'change',()=>{nsState[k]=k==='rate'||k==='angle'?Number(el.value):el.value;nsState.focus=(nsState.focus==='pressure' && (k==='rate'||k==='shape'))?'pressure':({time:'local',shape:'conv',rate:'visc',angle:'grav'})[k];renderNewNS()}));document.querySelectorAll('.ns-term-button').forEach(b=>b.addEventListener('click',()=>{nsState.focus=b.dataset.focus;renderNewNS();}));
+let nsFrame=0,nsLastTime=0,nsElapsed=0,nsAdvancement=0;
+const nsParticleOffsets=Array.from({length:47},(_,i)=>i/47);
+function animateNewNS(timestamp){
+ const dt=nsLastTime?Math.min(.05,Math.max(0,(timestamp-nsLastTime)/1000)):1/60;
+ nsLastTime=timestamp;
+ if(!$('navierView').classList.contains('hidden')){
+  const s=nsState,R=nsRatio(),base=s.rate/55;
+  nsElapsed+=dt;
+  // Positive velocity at every instant; time variation is a modulation of speed, never reversed motion.
+  const omega=1.7, wave=s.time==='unsteady'?Math.sin(nsElapsed*omega):0;
+  const temporal=1+0.38*wave;
+  const speed=base*temporal;
+  const dSpeedDt=s.time==='unsteady'?base*0.38*omega*Math.cos(nsElapsed*omega):0;
+  nsAdvancement+=dt*.12*speed;
+  let particles='';
+  for(let i=0;i<47;i++){
+    const pos=(nsParticleOffsets[i]+nsAdvancement)%1;
+    const x=65+pos*714,ratio=x<425?1:R;
+    const y=144+Math.sin(i*23.42)*42*Math.min(1,ratio);
+    const a=.30+.28*(i%3)/3;
+    particles+=`<circle cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="${(1.8+(i%3)*.6)}" fill="#a8e3f3" opacity="${a}"/>`;
+  }
+  const arrowLen=Math.max(18,Math.min(99,speed*48));
+  particles+=`<path d="M184 144 h${arrowLen}" stroke="#58a9ff" stroke-width="4" stroke-linecap="round"/><path d="M${184+arrowLen} 144l-9 -6m9 6l-9 6" stroke="#58a9ff" fill="none" stroke-width="3"/>`;
+  $('flowParticlesNew').innerHTML=particles;
+  const axialLocal=document.querySelector('[data-axterm="local"]');
+  const signedLocal=Math.max(-1,Math.min(1,dSpeedDt/.7));
+  if(axialLocal)axialLocal.style.setProperty('--impact',s.time==='steady'?'.92':String(1+signedLocal*.16));
+  const loc=document.querySelector('[data-newterm="local"]');
+  if(loc){loc.style.setProperty('--live-scale',s.time==='steady'?'.88':String(1+signedLocal*.20));loc.classList.toggle('ns-active-live',s.time==='unsteady'&&Math.abs(signedLocal)>.08);}
+  const conv=document.querySelector('[data-newterm="conv"]');
+  const geoSigned=s.shape==='contract'?1:s.shape==='expand'?-1:0;
+  const geoMag=Math.abs(1/(R*R)-1)*base;
+  if(conv){const convMagnitude=Math.min(.20,geoMag*.11);conv.style.setProperty('--live-scale',String(geoSigned===0?.90:1+convMagnitude));}
+  document.querySelectorAll('[data-axterm="conv"]').forEach(el=>el.style.setProperty('--impact', String(geoSigned===0?.92:1+geoSigned*Math.min(.10,geoMag*.06))));
+  const pressure=document.querySelector('[data-newterm="pressure"]');
+  if(pressure){const pressureScale=1+Math.max(-.14,Math.min(.16,(base-1)*.18))+Math.min(.08,geoMag*.045);pressure.style.setProperty('--live-scale',String(pressureScale));}
+  document.querySelectorAll('[data-axterm="pressure"]').forEach(el=>el.style.setProperty('--impact', String(1+Math.max(-.12,Math.min(.14,(base-1)*.16))+Math.min(.06,geoMag*.04))));
+  const visc=document.querySelector('[data-newterm="visc"]');
+  const baseCenter=1;
+  const viscDelta=Math.max(-1,Math.min(1,(base-baseCenter)/0.8));
+  if(visc){visc.style.setProperty('--live-scale',String(1+viscDelta*.18));}
+  document.querySelectorAll('[data-axterm="visc"]').forEach(el=>el.style.setProperty('--impact', String(1+viscDelta*.12)));
+  const grav=document.querySelector('[data-newterm="grav"]');
+  if(grav){const gmag=Math.abs(Math.sin(s.angle*Math.PI/180));grav.style.setProperty('--live-scale',String(1+Math.min(.16,gmag*.40)));}
+ }
+ requestAnimationFrame(animateNewNS);
+}
+renderNewNS();requestAnimationFrame(animateNewNS);
+</script></body></html>
